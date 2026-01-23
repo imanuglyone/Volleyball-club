@@ -1,6 +1,8 @@
 ﻿import { createTraining } from '@/app/admin/actions';
 import { AdminTrainingForm } from '@/components/AdminTrainingForm';
 
+export const dynamic = 'force-dynamic';
+
 export default function NewTrainingPage() {
   return (
     <div>

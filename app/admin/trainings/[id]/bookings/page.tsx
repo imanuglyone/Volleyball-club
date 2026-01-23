@@ -1,11 +1,17 @@
-﻿import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+﻿import { unstable_noStore as noStore } from 'next/cache';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { cancelBooking } from '@/app/admin/actions';
 
 type BookingPageProps = {
   params: { id: string };
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 export default async function TrainingBookingsPage({ params }: BookingPageProps) {
+  noStore();
   const supabase = createSupabaseAdminClient();
 
   const { data: training } = await supabase
@@ -28,7 +34,7 @@ export default async function TrainingBookingsPage({ params }: BookingPageProps)
     <div>
       <h1 className="heading text-2xl font-semibold text-white">{'\u0417\u0430\u043f\u0438\u0441\u0438 \u043d\u0430 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443'}</h1>
       <div className="mt-2 text-sm text-steel-200">
-        {training.date} · {training.start_time.slice(0, 5)}–{training.end_time.slice(0, 5)}
+        {training.date} · {training.start_time.slice(0, 5)} - {training.end_time.slice(0, 5)}
       </div>
 
       <div className="mt-6 overflow-x-auto">

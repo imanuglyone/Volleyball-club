@@ -4,6 +4,8 @@ import { todayDateString } from '@/lib/format';
 import type { TrainingStats } from '@/lib/types';
 import { deleteTraining, toggleTrainingActive } from '@/app/admin/actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminPage() {
   const supabase = createSupabaseAdminClient();
   const today = todayDateString();

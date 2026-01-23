@@ -36,6 +36,11 @@ export function BookingModal({ open, training, onClose, onBooked }: BookingModal
     event.preventDefault();
     setError(null);
 
+    if (!training) {
+      setError('\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430.');
+      return;
+    }
+
     const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
 

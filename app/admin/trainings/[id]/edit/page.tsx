@@ -6,6 +6,8 @@ type EditTrainingPageProps = {
   params: { id: string };
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function EditTrainingPage({ params }: EditTrainingPageProps) {
   const supabase = createSupabaseAdminClient();
   const { data } = await supabase.from('trainings').select('*').eq('id', params.id).single();

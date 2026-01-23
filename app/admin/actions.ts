@@ -85,7 +85,7 @@ export async function cancelBooking(bookingId: string) {
 
   const { data: booking } = await supabase
     .from('bookings')
-    .select('id, name, phone, status, trainings(date, start_time, end_time)')
+    .select('id, name, phone, status, trainings:trainings(date, start_time, end_time)')
     .eq('id', bookingId)
     .single();
 
@@ -99,7 +99,7 @@ export async function cancelBooking(bookingId: string) {
     throw new Error('Cancel booking failed');
   }
 
-  const training = booking.trainings;
+  const training = Array.isArray(booking.trainings) ? booking.trainings[0] : booking.trainings;
   if (training) {
     const text = `\u0417\u0430\u043f\u0438\u0441\u044c \u043e\u0442\u043c\u0435\u043d\u0435\u043d\u0430 \u274c\n\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430: ${formatDate(training.date)} ${formatTimeRange(
       training.start_time,
