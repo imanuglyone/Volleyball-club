@@ -1,65 +1,35 @@
-import Image from "next/image";
+﻿import { PublicBooking } from '@/components/PublicBooking';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <section className="relative overflow-hidden">
+        <div className="container-page pb-8 pt-16">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr]">
+            <div className="space-y-6">
+              <div className="badge w-fit animate-fade-up">{'\u0412\u043e\u043b\u0435\u0439\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043a\u043b\u0443\u0431'}</div>
+              <h1 className="heading text-4xl font-semibold text-white md:text-5xl animate-fade-up animate-delay-1">
+                {'\u0417\u0430\u043f\u0438\u0441\u044c \u043d\u0430 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438'}
+              </h1>
+              <p className="max-w-xl text-base text-steel-200 animate-fade-up animate-delay-2">
+                {'\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0443\u0434\u043e\u0431\u043d\u0443\u044e \u0434\u0430\u0442\u0443, \u043f\u043e\u0441\u043c\u043e\u0442\u0440\u0438\u0442\u0435 \u0440\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0438 \u043e\u0441\u0442\u0430\u0432\u044c\u0442\u0435 \u0437\u0430\u044f\u0432\u043a\u0443. \u0411\u0435\u0437 \u043f\u0440\u0435\u0434\u043e\u043f\u043b\u0430\u0442\u044b \u2014 \u043f\u0440\u043e\u0441\u0442\u043e \u0438\u043c\u044f \u0438 \u0442\u0435\u043b\u0435\u0444\u043e\u043d.'}
+              </p>
+            </div>
+            <div className="card card-soft p-6 text-sm text-steel-200 animate-fade-up animate-delay-2">
+              <div className="text-xs uppercase tracking-[0.3em] text-steel-300">{'\u041f\u0440\u0430\u0432\u0438\u043b\u0430'}</div>
+              <ul className="mt-4 space-y-3">
+                <li>{'\u041f\u0440\u0438\u0445\u043e\u0434\u0438\u0442\u0435 \u0437\u0430 10 \u043c\u0438\u043d\u0443\u0442 \u0434\u043e \u043d\u0430\u0447\u0430\u043b\u0430.'}</li>
+                <li>{'\u041e\u043f\u043b\u0430\u0442\u0430 \u043d\u0430 \u043c\u0435\u0441\u0442\u0435, \u0431\u0435\u0437 \u043f\u0440\u0435\u0434\u043e\u043f\u043b\u0430\u0442.'}</li>
+                <li>{'\u041e\u0442\u043c\u0435\u043d\u0430 \u2014 \u043d\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u0430\u0434\u043c\u0438\u043d\u0443.'}</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="container-page pb-16">
+        <PublicBooking />
+      </section>
+    </main>
   );
 }
