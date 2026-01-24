@@ -14,6 +14,8 @@ function parseTrainingForm(formData: FormData) {
     end_time: formData.get('end_time'),
     price: formData.get('price'),
     capacity: formData.get('capacity'),
+    location_name: formData.get('location_name'),
+    address: formData.get('address'),
     is_active: formData.get('is_active') === 'on'
   };
 

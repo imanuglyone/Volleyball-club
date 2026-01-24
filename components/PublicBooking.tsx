@@ -93,6 +93,14 @@ export function PublicBooking() {
                     <div className="text-lg font-semibold text-white">
                       {formatTimeRange(training.start_time, training.end_time)}
                     </div>
+                    {training.location_name ? (
+                      <div className="text-sm text-steel-200">
+                        {'\u0417\u0430\u043b: '} {training.location_name}
+                      </div>
+                    ) : null}
+                    {training.address ? (
+                      <div className="text-sm text-steel-300">{training.address}</div>
+                    ) : null}
                     <div className="text-sm text-steel-200">
                       {'\u0426\u0435\u043d\u0430: '} {training.price} {'\u20bd'}
                     </div>

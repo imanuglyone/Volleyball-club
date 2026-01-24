@@ -34,6 +34,7 @@ export default async function AdminPage() {
             <tr className="text-left text-xs uppercase tracking-wide text-steel-300">
               <th className="border-b border-night-700 pb-3">{'\u0414\u0430\u0442\u0430'}</th>
               <th className="border-b border-night-700 pb-3">{'\u0412\u0440\u0435\u043c\u044f'}</th>
+              <th className="border-b border-night-700 pb-3">{'\u0417\u0430\u043b'}</th>
               <th className="border-b border-night-700 pb-3">{'\u0426\u0435\u043d\u0430'}</th>
               <th className="border-b border-night-700 pb-3">{'\u041b\u0438\u043c\u0438\u0442'}</th>
               <th className="border-b border-night-700 pb-3">{'\u0410\u043a\u0442\u0438\u0432\u043d\u0430'}</th>
@@ -46,8 +47,9 @@ export default async function AdminPage() {
               <tr key={training.id} className="border-b border-night-800">
                 <td className="py-3 text-steel-200">{training.date}</td>
                 <td className="py-3 text-steel-200">
-                  {training.start_time.slice(0, 5)}–{training.end_time.slice(0, 5)}
+                  {training.start_time.slice(0, 5)} - {training.end_time.slice(0, 5)}
                 </td>
+                <td className="py-3 text-steel-200">{training.location_name ?? '\u2014'}</td>
                 <td className="py-3 text-steel-200">{training.price} {'\u20bd'}</td>
                 <td className="py-3 text-steel-200">{training.capacity}</td>
                 <td className="py-3">

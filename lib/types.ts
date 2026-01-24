@@ -19,6 +19,8 @@ export type TrainingStats = {
   end_time: string;
   price: number;
   capacity: number;
+  location_name?: string | null;
+  address?: string | null;
   is_active: boolean;
   created_at: string;
   active_bookings: number;

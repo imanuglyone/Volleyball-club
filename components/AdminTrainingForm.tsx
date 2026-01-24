@@ -68,6 +68,27 @@ export function AdminTrainingForm({ action, submitLabel, defaultValues }: Traini
         </label>
       </div>
 
+      <div className="grid gap-4 md:grid-cols-2">
+        <label className="block">
+          <div className="label">{'\u0417\u0430\u043b (\u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435)'}</div>
+          <input
+            className="input"
+            name="location_name"
+            defaultValue={defaultValues?.location_name ?? ''}
+            placeholder={'\u0411\u043e\u043b\u044c\u0448\u043e\u0439 \u0437\u0430\u043b'}
+          />
+        </label>
+        <label className="block">
+          <div className="label">{'\u0410\u0434\u0440\u0435\u0441'}</div>
+          <input
+            className="input"
+            name="address"
+            defaultValue={defaultValues?.address ?? ''}
+            placeholder={'\u0423\u043b. \u041f\u0440\u0438\u043c\u0435\u0440\u043d\u0430\u044f, 12'}
+          />
+        </label>
+      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input
           type="checkbox"

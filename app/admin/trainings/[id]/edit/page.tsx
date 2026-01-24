@@ -10,7 +10,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditTrainingPage({ params }: EditTrainingPageProps) {
   const supabase = createSupabaseAdminClient();
-  const { data } = await supabase.from('trainings').select('*').eq('id', params.id).single();
+  const { data } = await supabase
+    .from('trainings')
+    .select('id, date, start_time, end_time, price, capacity, is_active, location_name, address')
+    .eq('id', params.id)
+    .single();
 
   if (!data) {
     return <div className="text-steel-200">{'\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430.'}</div>;
@@ -29,6 +33,8 @@ export default async function EditTrainingPage({ params }: EditTrainingPageProps
             end_time: data.end_time,
             price: data.price,
             capacity: data.capacity,
+            location_name: data.location_name ?? '',
+            address: data.address ?? '',
             is_active: data.is_active
           }}
         />

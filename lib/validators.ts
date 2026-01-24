@@ -14,6 +14,8 @@ export const trainingSchema = z.object({
   end_time: z.string().regex(/^\d{2}:\d{2}/),
   price: z.coerce.number().int().min(0),
   capacity: z.coerce.number().int().min(1),
+  location_name: z.string().trim().min(2).max(120).optional().or(z.literal('')),
+  address: z.string().trim().min(2).max(200).optional().or(z.literal('')),
   is_active: z.coerce.boolean().default(true)
 });
 
