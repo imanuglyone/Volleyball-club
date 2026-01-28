@@ -44,7 +44,7 @@ export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthCh
   const title = new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' }).format(month);
 
   return (
-    <div className="card p-4 animate-fade-up">
+    <div className="card calendar-shell p-4 animate-fade-up">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <button
           type="button"
@@ -85,15 +85,17 @@ export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthCh
               key={key}
               type="button"
               onClick={() => onSelect(key)}
-              className={`h-10 rounded-xl border text-sm transition ${
+              className={`calendar-day h-10 border text-sm transition ${
                 isSelected
                   ? 'border-ember-500 bg-ember-500 text-white shadow-glow'
-                  : 'border-night-700 bg-night-900/70 text-steel-200 hover:border-ice-500'
+                  : isMarked
+                    ? 'border-ice-400/60 bg-night-800 text-white hover:border-ice-400'
+                    : 'border-night-700 bg-night-900/70 text-steel-200 hover:border-ice-500'
               }`}
             >
               <span className="flex items-center justify-center gap-1">
                 {cell.getDate()}
-                {isMarked ? <span className="h-1.5 w-1.5 rounded-full bg-ice-500" /> : null}
+                {isMarked ? <span className="h-1.5 w-1.5 rounded-full bg-ice-400 shadow-[0_0_8px_rgba(93,210,255,0.8)]" /> : null}
               </span>
             </button>
           );

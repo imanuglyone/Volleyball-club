@@ -44,6 +44,7 @@ TELEGRAM_CHAT_ID=
   - `sql/001_init.sql`
   - `sql/002_add_location.sql`
   - `sql/003_refresh_trainings_stats.sql`
+  - `sql/004_cleanup_bookings.sql`
 
 4) Create admin user
 - Supabase Dashboard -> Authentication -> Users -> Create user (email/password).
@@ -56,6 +57,34 @@ npm run dev
 ## Deployment (Vercel)
 - Set the same env vars in Vercel Project Settings -> Environment Variables.
 - Redeploy after changing env variables.
+
+## Telegram bot commands
+Enable bot commands via webhook:
+
+1) Set webhook:
+```bash
+curl -X POST "https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook" \\
+  -d "url=https://your-domain.com/api/telegram" \\
+  -d "secret_token=<YOUR_SECRET>"
+```
+
+2) Add env vars:
+```
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_WEBHOOK_SECRET=
+```
+
+Commands:
+- `/list 2026-01-24` — list of names for the date
+- `/stats 2026-01-24` — booked/free stats for the date
+
+Date formats: `YYYY-MM-DD` or `DD.MM.YYYY`.
+
+## Cleanup old bookings
+Use SQL function to delete bookings for trainings before a date:
+```sql
+select cleanup_old_bookings('2026-01-01');
+```
 
 ## API endpoints
 - `GET /api/trainings?from=YYYY-MM-DD&to=YYYY-MM-DD`

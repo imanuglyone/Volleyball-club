@@ -20,7 +20,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${manrope.variable} ${unbounded.variable}`}>
-      <body>{children}</body>
+      <body>
+        <div className="spotlight" />
+        <div className="spotlight right" />
+        <div className="grain" />
+        {children}
+      </body>
     </html>
   );
 }
