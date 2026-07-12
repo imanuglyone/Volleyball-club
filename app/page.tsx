@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, CalendarDays, MapPin, Sparkles, Users } from 'lucide-react';
+import { TelegramEntryRedirect } from '@/components/telegram/TelegramEntryRedirect';
 
 const features = [
   { number: '01', icon: CalendarDays, title: 'Живое расписание', text: 'Ближайшие тренировки, свободные места и вся информация о площадке в одном экране.' },
@@ -9,6 +10,7 @@ const features = [
 
 export default function PublicHomePage() {
   return <main className="public-site">
+    <TelegramEntryRedirect />
     <div className="public-noise" aria-hidden="true" />
     <header className="public-header">
       <Link href="/" className="public-logo"><span>AV</span><strong>Авангард</strong></Link>

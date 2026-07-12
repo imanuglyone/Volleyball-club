@@ -21,7 +21,7 @@ export function BookingAction({ trainingId, disabled }: { trainingId: string; di
       };
       setError(messages[data.error] ?? 'Не удалось записаться. Попробуйте ещё раз.'); haptic('error'); return;
     }
-    setSuccess(true); haptic('success'); router.refresh();
+    setSuccess(true); haptic('success'); window.dispatchEvent(new Event('booking:created')); router.refresh();
   }
   if (success) return <div className="success-card"><strong>Вы записаны!</strong><p>Запись появилась в разделе «Мои записи».</p><button className="button-primary" onClick={() => router.push('/bookings')}>Мои записи</button></div>;
   return <div className="booking-action"><label>Имя<input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ваше имя"/></label><label>Телефон<input inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 900 000-00-00"/></label>{error && <p className="form-error">{error}</p>}<button className="button-primary" disabled={disabled || busy} onClick={book}>{busy ? 'Записываем…' : disabled ? 'Мест нет' : 'Записаться'}</button></div>;
