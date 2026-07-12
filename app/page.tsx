@@ -19,12 +19,12 @@ export default function PublicHomePage() {
     <section className="public-hero">
       <div className="public-hero-orbit" aria-hidden="true"><i/><i/><i/><span>AV</span></div>
       <div className="public-hero-copy">
-        <p className="public-kicker"><span/> Волейбол в Иркутске · 2026</p>
+        <p className="public-kicker"><span/> Волейбол в Ангарске · 2026</p>
         <h1>Твоя игра.<br/><em>Твоя команда.</em></h1>
         <p className="public-lead">Тренировки, после которых хочется вернуться. Живой волейбол для тех, кто ценит движение, людей и атмосферу площадки.</p>
         <div className="public-actions"><Link href="/app">Выбрать тренировку <ArrowRight size={19}/></Link><Link href="/schedule">Смотреть расписание</Link></div>
       </div>
-      <div className="public-hero-meta"><span>52°17′N / 104°17′E</span><span>SCROLL TO EXPLORE ↓</span></div>
+      <div className="public-hero-meta"><span>52°32′N / 103°53′E</span><span>SCROLL TO EXPLORE ↓</span></div>
     </section>
 
     <section className="public-manifesto" id="about">
@@ -43,6 +43,6 @@ export default function PublicHomePage() {
     </section>
 
     <section className="public-final"><span className="public-section-no">ТВОЙ СЛЕДУЮЩИЙ МАТЧ</span><h2>Увидимся<br/><em>на площадке.</em></h2><Link href="/app">Открыть приложение <ArrowRight size={21}/></Link></section>
-    <footer className="public-footer"><div className="public-logo"><span>AV</span><strong>Авангард</strong></div><p>Волейбольный клуб · Иркутск</p><span>© 2026</span></footer>
+    <footer className="public-footer"><div className="public-logo"><span>AV</span><strong>Авангард</strong></div><p>Волейбольный клуб · Ангарск</p><span>© 2026</span></footer>
   </main>;
 }
