@@ -1,4 +1,7 @@
-function appUrl() { return process.env.NEXT_PUBLIC_APP_URL ?? 'https://example.com'; }
+function appUrl() {
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://example.com').replace(/\/$/, '');
+  return `${baseUrl}/app`;
+}
 
 export function appKeyboard() {
   return {
