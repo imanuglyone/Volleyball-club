@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 
 export function miniAppError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error ?? '');
+  const message = error instanceof Error
+    ? error.message
+    : typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string'
+      ? error.message
+      : String(error ?? '');
   if (message.includes('telegram_')) return NextResponse.json({ error: message }, { status: 401 });
   const conflict = ['booking_duplicate', 'booking_full', 'training_inactive', 'training_past', 'training_not_found']
     .find((code) => message.includes(code));

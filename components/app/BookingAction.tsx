@@ -13,7 +13,14 @@ export function BookingAction({ trainingId, disabled }: { trainingId: string; di
     setBusy(true); setError(null);
     const response = await apiFetch('/api/mini-app/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ training_id: trainingId, display_name: name, phone }) });
     const data = await response.json().catch(() => ({})); setBusy(false);
-    if (!response.ok) { setError(data.error === 'booking_duplicate' ? 'Вы уже записаны.' : data.error === 'booking_full' ? 'Места только что закончились.' : 'Проверьте имя и телефон.'); haptic('error'); return; }
+    if (!response.ok) {
+      const messages: Record<string, string> = {
+        booking_duplicate: 'Вы уже записаны.', booking_full: 'Места только что закончились.',
+        training_inactive: 'Запись на эту тренировку закрыта.', training_past: 'Эта тренировка уже прошла.',
+        validation: 'Проверьте имя и телефон.', profile_required: 'Укажите имя и корректный телефон.'
+      };
+      setError(messages[data.error] ?? 'Не удалось записаться. Попробуйте ещё раз.'); haptic('error'); return;
+    }
     setSuccess(true); haptic('success'); router.refresh();
   }
   if (success) return <div className="success-card"><strong>Вы записаны!</strong><p>Запись появилась в разделе «Мои записи».</p><button className="button-primary" onClick={() => router.push('/bookings')}>Мои записи</button></div>;
