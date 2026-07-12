@@ -5,6 +5,18 @@
   phone: string;
   status: 'active' | 'cancelled';
   created_at: string;
+  profile_id?: string | null;
+};
+
+export type Profile = {
+  id: string;
+  telegram_user_id: number;
+  telegram_username: string | null;
+  first_name: string;
+  last_name: string | null;
+  display_name: string;
+  phone: string | null;
+  photo_url: string | null;
 };
 
 export type PublicBooking = {

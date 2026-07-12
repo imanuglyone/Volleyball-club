@@ -95,3 +95,36 @@ select cleanup_old_bookings('2026-01-01');
 - Bookings are inserted only via server API with `SUPABASE_SERVICE_ROLE_KEY`.
 - Capacity checks are enforced in Postgres function `create_booking`.
 - Telegram messages are sent via Bot API if tokens are set.
+
+## Telegram Mini App
+
+The mobile application validates Telegram `initData` on the server, creates a profile linked to `telegram_user_id`, and lets that verified user view and cancel only their own individual bookings. `initDataUnsafe` is not trusted for authorization and `SUPABASE_SERVICE_ROLE_KEY` remains server-only.
+
+Additional environment variables:
+
+```env
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+TELEGRAM_INIT_DATA_MAX_AGE_SECONDS=86400
+```
+
+Apply `sql/005_telegram_mini_app.sql` after migrations 001–004. It adds `profiles`, links `bookings.profile_id`, adds indexes, preserves legacy `name + phone`, and installs profile-aware atomic booking/cancellation RPCs.
+
+### BotFather and webhook setup
+
+1. Deploy the app over HTTPS and set `NEXT_PUBLIC_APP_URL` to its public origin.
+2. In BotFather use `/mybots` → your bot → **Bot Settings** → **Menu Button** and set the application URL.
+3. Configure **Main Mini App** with the same URL.
+4. Configure commands `start`, `next`, `list`, `stats`, and `help`.
+5. Register `/api/telegram` as the webhook and pass a strong `secret_token` matching `TELEGRAM_WEBHOOK_SECRET`.
+
+`/start` sends an «Открыть приложение» Web App button. The administrative `/next`, `/list`, `/stats`, and `/help` commands remain available. Cancellation is performed inside the Mini App against one selected booking.
+
+The public screens render in a regular browser without Telegram. Personal actions require a signed Telegram launch and show a clear entry-state instead of crashing.
+
+### Verification
+
+```bash
+npm run lint
+npm test
+npm run build
+```

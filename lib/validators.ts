@@ -22,3 +22,10 @@ export const trainingSchema = z.object({
 export function normalizePhone(value: string) {
   return value.trim().replace(/[\s()\-]/g, '');
 }
+
+export const profileSchema = z.object({
+  display_name: z.string().trim().min(2).max(50),
+  phone: z.string().trim().min(8).max(20).regex(phoneRegex)
+});
+export const miniAppBookingSchema = z.object({ training_id: z.string().uuid() });
+export const cancelBookingSchema = z.object({ booking_id: z.string().uuid() });
