@@ -12,7 +12,7 @@ const items = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (pathname.startsWith('/admin')) return <>{children}</>;
-  return <div className="mini-app"><div className="ambient-grid" aria-hidden="true"/><main className="app-content">{children}</main><nav className="bottom-nav" aria-label="Основная навигация">
+  return <div className="mini-app"><div className="ambient-grid" aria-hidden="true"><span className="ambient-orbit orbit-a"/><span className="ambient-orbit orbit-b"/><span className="ambient-ray ray-a"/><span className="ambient-ray ray-b"/><i className="star s1"/><i className="star s2"/><i className="star s3"/><i className="star s4"/><i className="star s5"/><i className="star s6"/><i className="star s7"/><i className="star s8"/></div><main className="app-content">{children}</main><nav className="bottom-nav" aria-label="Основная навигация">
     {items.map(({ href, label, icon: Icon }) => {
       const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
       return <Link key={href} href={href} className={active ? 'nav-item active' : 'nav-item'} aria-current={active ? 'page' : undefined}>
