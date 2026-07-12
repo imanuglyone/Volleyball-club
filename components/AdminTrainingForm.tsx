@@ -8,7 +8,7 @@ type TrainingFormProps = {
 
 export function AdminTrainingForm({ action, submitLabel, defaultValues }: TrainingFormProps) {
   return (
-    <form action={action} className="card space-y-4 p-6">
+    <form action={action} className="admin-training-form">
       <label className="block">
         <div className="label">{'\u0414\u0430\u0442\u0430'}</div>
         <input
@@ -99,7 +99,7 @@ export function AdminTrainingForm({ action, submitLabel, defaultValues }: Traini
         {'\u0410\u043a\u0442\u0438\u0432\u043d\u0430 \u0434\u043b\u044f \u043f\u0443\u0431\u043b\u0438\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0438\u0441\u0438'}
       </label>
 
-      <button type="submit" className="btn-primary">
+      <button type="submit" className="admin-primary admin-submit">
         {submitLabel}
       </button>
     </form>

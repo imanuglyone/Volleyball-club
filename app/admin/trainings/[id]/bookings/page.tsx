@@ -1,11 +1,11 @@
-﻿import { unstable_noStore as noStore } from 'next/cache';
+import Link from 'next/link';
+import { unstable_noStore as noStore } from 'next/cache';
+import { ArrowLeft, MapPin, Phone, UserRound, UserX } from 'lucide-react';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { cancelBooking } from '@/app/admin/actions';
+import { formatDate, formatTimeRange } from '@/lib/format';
 
-type BookingPageProps = {
-  params: { id: string };
-};
-
+type BookingPageProps = { params: { id: string } };
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
@@ -13,70 +13,17 @@ export const fetchCache = 'force-no-store';
 export default async function TrainingBookingsPage({ params }: BookingPageProps) {
   noStore();
   const supabase = createSupabaseAdminClient();
+  const [{ data: training }, { data: bookings }] = await Promise.all([
+    supabase.from('trainings').select('date, start_time, end_time, location_name, address, capacity').eq('id', params.id).single(),
+    supabase.from('bookings').select('*').eq('training_id', params.id).order('created_at', { ascending: false })
+  ]);
+  if (!training) return <div className="admin-empty"><h2>Тренировка не найдена</h2></div>;
+  const active = (bookings ?? []).filter((item) => item.status === 'active');
 
-  const { data: training } = await supabase
-    .from('trainings')
-    .select('date, start_time, end_time, location_name, address')
-    .eq('id', params.id)
-    .single();
-
-  const { data: bookings } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('training_id', params.id)
-    .order('created_at', { ascending: false });
-
-  if (!training) {
-    return <div className="text-steel-200">{'\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430.'}</div>;
-  }
-
-  return (
-    <div>
-      <h1 className="heading text-2xl font-semibold text-white">{'\u0417\u0430\u043f\u0438\u0441\u0438 \u043d\u0430 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443'}</h1>
-      <div className="mt-2 text-sm text-steel-200">
-        {training.date} · {training.start_time.slice(0, 5)} - {training.end_time.slice(0, 5)}
-      </div>
-      <div className="mt-3 space-y-1 text-sm text-steel-300">
-        {training.location_name ? <div>{'\u0417\u0430\u043b: '} {training.location_name}</div> : null}
-        {training.address ? <div>{training.address}</div> : null}
-      </div>
-
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full min-w-[640px] border-separate border-spacing-0 text-sm">
-          <thead>
-            <tr className="text-left text-xs uppercase tracking-wide text-steel-300">
-              <th className="border-b border-night-700 pb-3">{'\u0414\u0430\u0442\u0430 \u0437\u0430\u043f\u0438\u0441\u0438'}</th>
-              <th className="border-b border-night-700 pb-3">{'\u0418\u043c\u044f'}</th>
-              <th className="border-b border-night-700 pb-3">{'\u0422\u0435\u043b\u0435\u0444\u043e\u043d'}</th>
-              <th className="border-b border-night-700 pb-3">{'\u0421\u0442\u0430\u0442\u0443\u0441'}</th>
-              <th className="border-b border-night-700 pb-3 text-right">{'\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(bookings ?? []).map((booking) => (
-              <tr key={booking.id} className="border-b border-night-800">
-                <td className="py-3 text-steel-200">{new Date(booking.created_at).toLocaleString('ru-RU')}</td>
-                <td className="py-3 text-steel-200">{booking.name}</td>
-                <td className="py-3 text-steel-200">{booking.phone}</td>
-                <td className="py-3 text-steel-200">
-                  {booking.status === 'active' ? '\u0410\u043a\u0442\u0438\u0432\u043d\u0430' : '\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u0430'}
-                </td>
-                <td className="py-3 text-right">
-                  {booking.status === 'active' ? (
-                    <form action={cancelBooking.bind(null, booking.id)}>
-                      <button type="submit" className="btn-ghost text-red-400">
-                        {'\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c'}
-                      </button>
-                    </form>
-                  ) : (
-                    <span className="text-steel-400">{'\u2014'}</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  return <div className="admin-bookings-page">
+    <Link href="/admin" className="admin-back"><ArrowLeft size={17}/>К тренировкам</Link>
+    <section className="admin-page-head"><div><span className="admin-eyebrow">УЧАСТНИКИ / {formatDate(training.date)}</span><h1>{formatTimeRange(training.start_time, training.end_time)}</h1><p className="admin-place-line"><MapPin size={16}/>{training.location_name || 'Спортивный зал'} · {training.address || 'Адрес не указан'}</p></div><div className="admin-capacity-badge"><strong>{active.length}</strong><span>из {training.capacity}<br/>записано</span></div></section>
+    <div className="admin-list-head"><h2>Список участников</h2><span>{active.length} активных</span></div>
+    {(bookings ?? []).length ? <section className="admin-booking-list">{(bookings ?? []).map((booking, index) => <article key={booking.id} className={booking.status === 'active' ? 'admin-booking-card' : 'admin-booking-card cancelled'}><span className="admin-person-index">{String(index + 1).padStart(2, '0')}</span><div className="admin-person-avatar"><UserRound size={19}/></div><div className="admin-person-data"><strong>{booking.name}</strong><a href={`tel:${booking.phone}`}><Phone size={13}/>{booking.phone}</a><small>{new Date(booking.created_at).toLocaleString('ru-RU')}</small></div><span className="admin-booking-status">{booking.status === 'active' ? 'Активна' : 'Отменена'}</span>{booking.status === 'active' && <form action={cancelBooking.bind(null, booking.id)}><button type="submit" className="admin-cancel-person" aria-label={`Отменить запись ${booking.name}`}><UserX size={18}/><span>Отменить</span></button></form>}</article>)}</section> : <div className="admin-empty"><UserRound size={30}/><h2>Пока никто не записался</h2><p>Новые участники появятся здесь автоматически.</p></div>}
+  </div>;
 }
