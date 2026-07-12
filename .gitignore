@@ -1,6 +1,7 @@
 # Next.js
 .next/
 node_modules/
+.pnpm-store/
 .env.local
 .env
 

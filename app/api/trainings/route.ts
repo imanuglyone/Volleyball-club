@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createSupabasePublicClient } from '@/lib/supabase/admin';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { todayDateString } from '@/lib/format';
 
 function isDateString(value: string | null) {
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'invalid_range' }, { status: 400 });
   }
 
-  const supabase = createSupabasePublicClient();
+  const supabase = createSupabaseAdminClient();
   const today = todayDateString();
 
   const { data, error } = await supabase

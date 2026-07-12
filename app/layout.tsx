@@ -1,16 +1,11 @@
 ﻿import type { Metadata } from 'next';
-import { Manrope, Unbounded } from 'next/font/google';
 import './globals.css';
+import Script from 'next/script';
+import { Manrope } from 'next/font/google';
+import { TelegramProvider } from '@/components/telegram/TelegramProvider';
+import { AppShell } from '@/components/app/AppShell';
 
-const manrope = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-body'
-});
-
-const unbounded = Unbounded({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-display'
-});
+const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manrope', display: 'swap' });
 
 export const metadata: Metadata = {
   title: '\u0412\u043e\u043b\u0435\u0439\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043a\u043b\u0443\u0431',
@@ -19,12 +14,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${manrope.variable} ${unbounded.variable}`}>
+    <html lang="ru" className={manrope.variable}>
       <body>
-        <div className="spotlight" />
-        <div className="spotlight right" />
-        <div className="grain" />
-        {children}
+        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+        <TelegramProvider><AppShell>{children}</AppShell></TelegramProvider>
       </body>
     </html>
   );
