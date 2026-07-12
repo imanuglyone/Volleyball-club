@@ -14,7 +14,7 @@ export default function HomePage() {
         <h1>{profile?.first_name ? <>Игра начинается<br/><em>с тебя, {profile.first_name}</em></> : <>Игра начинается<br/><em>с тебя</em></>}</h1>
         <p>Тренировки, люди и энергия площадки. Выбери свой вечер — остальное мы уже подготовили.</p>
       </div>
-      <div className="portal" aria-hidden="true"><div className="portal-ring ring-one"/><div className="portal-ring ring-two"/><div className="portal-core"><span>V</span></div><i className="particle p1"/><i className="particle p2"/><i className="particle p3"/><i className="particle p4"/></div>
+      <div className="boarding-pass" aria-hidden="true"><div className="pass-head"><span>BOARDING PASS</span><i>AV · 01</i></div><div className="pass-route"><div><small>FROM</small><strong>HOME</strong></div><b>→</b><div><small>TO</small><strong>COURT</strong></div></div><div className="pass-message">Your next<br/><em>game</em></div><div className="pass-meta"><span>IRK</span><span>VOLLEYBALL</span><span>2026</span></div><div className="barcode"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></div>
       <div className="hero-index"><span>ИРКУТСК</span><span>52°17′N</span></div>
     </section>
     <section className="next-section"><div className="section-heading"><div><span className="section-number">01</span><h2>Ближайшая<br/><em>тренировка</em></h2></div><Link href="/schedule" className="hairline-link">Все даты <ArrowUpRight size={14}/></Link></div><TrainingFeed limit={1}/></section>
