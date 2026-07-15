@@ -25,14 +25,16 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
     const app = window.Telegram?.WebApp ?? null;
     setWebApp(app);
     app?.ready(); app?.expand();
-    const safe = app?.contentSafeAreaInset ?? app?.safeAreaInset;
-    if (safe) {
-      const root = document.documentElement;
-      root.style.setProperty('--tg-safe-area-inset-top', `${safe.top}px`);
-      root.style.setProperty('--tg-safe-area-inset-right', `${safe.right}px`);
-      root.style.setProperty('--tg-safe-area-inset-bottom', `${safe.bottom}px`);
-      root.style.setProperty('--tg-safe-area-inset-left', `${safe.left}px`);
+    const root = document.documentElement;
+    const safe = app?.safeAreaInset;
+    const contentSafe = app?.contentSafeAreaInset;
+    if (safe || contentSafe) {
+      root.style.setProperty('--tg-safe-area-inset-top', `${Math.max(safe?.top ?? 0, contentSafe?.top ?? 0)}px`);
+      root.style.setProperty('--tg-safe-area-inset-right', `${Math.max(safe?.right ?? 0, contentSafe?.right ?? 0)}px`);
+      root.style.setProperty('--tg-safe-area-inset-bottom', `${Math.max(safe?.bottom ?? 0, contentSafe?.bottom ?? 0)}px`);
+      root.style.setProperty('--tg-safe-area-inset-left', `${Math.max(safe?.left ?? 0, contentSafe?.left ?? 0)}px`);
     }
+    Object.entries(app?.themeParams ?? {}).forEach(([key, value]) => root.style.setProperty(`--tg-theme-${key.replaceAll('_', '-')}`, value));
     if (!app?.initData) { setLoading(false); return; }
     fetch('/api/telegram/auth', { method: 'POST', headers: { 'x-telegram-init-data': app.initData } })
       .then(async (response) => { if (!response.ok) throw new Error('Не удалось подтвердить вход'); return response.json(); })

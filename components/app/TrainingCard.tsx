@@ -2,20 +2,26 @@ import Link from 'next/link';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { formatDate, formatTimeRange } from '@/lib/format';
 import type { TrainingStats } from '@/lib/types';
+import { CapacityMeter } from '@/components/ui/CapacityMeter';
+import { StatusPill, type TrainingVisualStatus } from '@/components/ui/StatusPill';
+import { buttonClassName } from '@/components/ui/Button';
 
 export function trainingStatus(training: TrainingStats) {
-  if (!training.is_active) return { key: 'cancelled', label: 'Отменена' };
-  if (training.remaining <= 0) return { key: 'full', label: 'Мест нет' };
-  if (training.remaining <= 3) return { key: 'almost_full', label: 'Почти заполнена' };
-  return { key: 'available', label: 'Есть места' };
+  if (!training.is_active) return { key: 'cancelled' as const, label: 'Отменена' };
+  if (training.remaining <= 0) return { key: 'full' as const, label: 'Мест нет' };
+  if (training.remaining <= 3) return { key: 'almost-full' as const, label: 'Мало мест' };
+  return { key: 'available' as const, label: 'Есть места' };
 }
 
-export function TrainingCard({ training, featured = false }: { training: TrainingStats; featured?: boolean }) {
+type TrainingCardProps = { training: TrainingStats; featured?: boolean; surface?: 'app' | 'public'; booked?: boolean };
+
+export function TrainingCard({ training, featured = false, surface = 'app', booked = false }: TrainingCardProps) {
   const status = trainingStatus(training);
-  return <article className={featured ? 'training-card featured' : 'training-card'}>
-    <div className="card-top"><div><div className="eyebrow">{formatDate(training.date)}</div><h2>{formatTimeRange(training.start_time, training.end_time)}</h2></div><span className={`status ${status.key}`}><i/>{status.label}</span></div>
-    <div className="location"><MapPin size={17}/><div><strong>{training.location_name || 'Спортивный зал'}</strong>{training.address && <span>{training.address}</span>}</div></div>
-    <div className="capacity"><div><span>Занято</span><strong>{training.active_bookings}/{training.capacity}</strong></div><div className="capacity-track"><i style={{ width: `${Math.min(100, training.active_bookings / training.capacity * 100)}%` }}/></div><span>{training.remaining} свободно</span></div>
-    <Link className="button-primary" href={`/trainings/${training.id}`}><span>{training.remaining > 0 ? 'Занять место' : 'Посмотреть'}</span><ArrowUpRight size={16}/></Link>
+  const visualStatus: TrainingVisualStatus = booked ? 'booked' : status.key;
+  return <article className={`training-card${featured ? ' training-card--featured' : ''} training-card--${surface}`}>
+    <div className="training-card__top"><div><div className="eyebrow">{formatDate(training.date)}</div><h2>{formatTimeRange(training.start_time, training.end_time)}</h2></div><StatusPill status={visualStatus} label={booked ? undefined : status.label}/></div>
+    <div className="training-card__location"><MapPin size={17}/><div><strong>{training.location_name || 'Спортивный зал'}</strong>{training.address && <span>{training.address}</span>}</div></div>
+    <CapacityMeter booked={training.active_bookings} capacity={training.capacity} remaining={training.remaining}/>
+    <div className="training-card__footer"><span className="training-card__price">{training.price} ₽</span><Link className={buttonClassName({ variant: status.key === 'cancelled' ? 'ghost' : 'primary', size: 'sm' })} href={`/trainings/${training.id}`}><span>{booked ? 'Открыть запись' : training.remaining > 0 && training.is_active ? 'Занять место' : 'Посмотреть'}</span><ArrowUpRight size={16}/></Link></div>
   </article>;
 }

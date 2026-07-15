@@ -1,0 +1,22 @@
+@keyframes mc-spin { to { transform: rotate(360deg); } }
+@keyframes mc-fade-in { from { opacity: 0; } }
+@keyframes mc-dialog-in { from { opacity: 0; transform: translateY(18px) scale(0.985); } }
+@keyframes mc-float { 50% { transform: translate3d(0, -10px, 0) rotate(-1deg); } }
+@keyframes mc-orbit { to { transform: rotate(360deg); } }
+@keyframes mc-drift { 50% { transform: translate3d(2%, -2%, 0) scale(1.03); opacity: 0.86; } }
+@keyframes mc-reveal { from { opacity: 0; transform: translateY(14px); } }
+@keyframes mc-pulse { 50% { opacity: 0.5; } }
+
+.mc-reveal { animation: mc-reveal var(--motion-slow) var(--ease-enter) both; }
+.mc-reveal--delay { animation-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

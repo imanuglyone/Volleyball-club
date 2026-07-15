@@ -8,33 +8,28 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        night: {
-          950: '#0b0e14',
-          900: '#101622',
-          800: '#151f2e',
-          700: '#1c2a3c'
+        canvas: 'var(--color-canvas)',
+        surface: {
+          1: 'var(--color-surface-1)',
+          2: 'var(--color-surface-2)',
+          3: 'var(--color-surface-3)'
         },
-        ember: {
-          500: '#ff7a1a',
-          600: '#e66712'
+        ink: {
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)'
         },
-        ice: {
-          400: '#5dd2ff',
-          500: '#2fb7ff'
-        },
-        steel: {
-          200: '#a6b3c2',
-          300: '#8fa1b5',
-          400: '#7c90a6'
+        signal: {
+          DEFAULT: 'var(--color-violet)',
+          bright: 'var(--color-violet-bright)',
+          soft: 'var(--color-violet-soft)'
         }
       },
       fontFamily: {
         body: ['var(--font-body)'],
         display: ['var(--font-display)']
       },
-      boxShadow: {
-        glow: '0 0 40px rgba(255, 122, 26, 0.25)'
-      }
+      boxShadow: { panel: 'var(--shadow-panel)', violet: 'var(--shadow-violet)' }
     }
   },
   plugins: []
