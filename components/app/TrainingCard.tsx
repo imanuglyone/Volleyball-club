@@ -21,7 +21,7 @@ export function TrainingCard({ training, featured = false, surface = 'app', book
   return <article className={`training-card${featured ? ' training-card--featured' : ''} training-card--${surface}`}>
     <div className="training-card__top"><div><div className="eyebrow">{formatDate(training.date)}</div><h2>{formatTimeRange(training.start_time, training.end_time)}</h2></div><StatusPill status={visualStatus} label={booked ? undefined : status.label}/></div>
     <div className="training-card__location"><MapPin size={17}/><div><strong>{training.location_name || 'Спортивный зал'}</strong>{training.address && <span>{training.address}</span>}</div></div>
-    <CapacityMeter booked={training.active_bookings} capacity={training.capacity} remaining={training.remaining}/>
+    {featured ? <div className="training-card__availability" aria-label={`Свободно ${training.remaining} из ${training.capacity}`}><strong>{training.remaining}</strong><span>/ {training.capacity}<small>мест свободно</small></span></div> : <CapacityMeter booked={training.active_bookings} capacity={training.capacity} remaining={training.remaining}/>} 
     <div className="training-card__footer"><span className="training-card__price">{training.price} ₽</span><Link className={buttonClassName({ variant: status.key === 'cancelled' ? 'ghost' : 'primary', size: 'sm' })} href={`/trainings/${training.id}`}><span>{booked ? 'Открыть запись' : training.remaining > 0 && training.is_active ? 'Занять место' : 'Посмотреть'}</span><ArrowUpRight size={16}/></Link></div>
   </article>;
 }

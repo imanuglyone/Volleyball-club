@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
 import { formatDate, formatTimeRange } from '@/lib/format';
 import type { TrainingStats } from '@/lib/types';
+import { isVisualPreview } from '@/lib/visual-preview';
 
 type ApiError = { error?: string };
 
@@ -23,8 +24,12 @@ export function BookingAction({ training, disabled }: { training: TrainingStats;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [visualPreview, setVisualPreview] = useState(false);
 
   useEffect(() => {
+    const preview = isVisualPreview();
+    setVisualPreview(preview);
+    if (preview) { setName('Иван'); setPhone('+7 900 123-45-67'); }
     if (process.env.NODE_ENV === 'development' && new URLSearchParams(window.location.search).get('success') === '1') setSuccess(true);
   }, []);
 
@@ -49,6 +54,8 @@ export function BookingAction({ training, disabled }: { training: TrainingStats;
   }
 
   if (success) return <section className="booking-success" aria-live="polite"><span className="booking-success__icon"><Check size={28}/></span><div className="eyebrow">Место в команде</div><h2>Ты в игре!</h2><p className="booking-success__date">{formatDate(training.date)} · {formatTimeRange(training.start_time, training.end_time)}</p><p className="booking-success__place"><MapPin size={17}/>{training.location_name}{training.address ? `, ${training.address}` : ''}</p><div className="booking-success__actions"><Button full onClick={() => router.push('/bookings')}><Volleyball size={18}/>Мои записи</Button><Button full variant="secondary" onClick={addToCalendar}><CalendarPlus size={18}/>Добавить в календарь</Button></div></section>;
+
+  if ((profile?.display_name && profile.phone) || visualPreview) return <section className="booking-action booking-action--compact" aria-labelledby="booking-title"><div><span className="section-number">03</span><h2 id="booking-title">Занять место</h2></div><p>Данные сохранены — подтверди запись одним нажатием.</p>{error && <p className="form-error" role="alert">{error}</p>}<Button full size="lg" disabled={disabled} loading={busy} onClick={book}>{disabled ? 'Мест нет' : 'Записаться'}</Button></section>;
 
   return <section className="booking-action" aria-labelledby="booking-title"><div><span className="section-number">03</span><h2 id="booking-title">Занять место</h2></div><p>Подтверди данные — повторная запись займёт одно нажатие.</p><Field label="Имя" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ваше имя" autoComplete="name"/><Field label="Телефон" inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+7 900 000-00-00" autoComplete="tel"/>{error && <p className="form-error" role="alert">{error}</p>}<Button full size="lg" disabled={disabled} loading={busy} onClick={book}>{disabled ? 'Мест нет' : 'Записаться'}</Button></section>;
 }
