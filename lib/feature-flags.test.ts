@@ -11,7 +11,7 @@ describe('getSurfaceFeatureFlags', () => {
     });
   });
 
-  it('enables V2 by default only for Vercel Preview', () => {
+  it('enables V2 by default for released Vercel environments', () => {
     expect(getSurfaceFeatureFlags({ VERCEL_ENV: 'preview' })).toMatchObject({
       siteV2: true,
       miniAppV2: true,
@@ -20,9 +20,9 @@ describe('getSurfaceFeatureFlags', () => {
     });
 
     expect(getSurfaceFeatureFlags({ VERCEL_ENV: 'production' })).toMatchObject({
-      siteV2: false,
-      miniAppV2: false,
-      adminV2: false,
+      siteV2: true,
+      miniAppV2: true,
+      adminV2: true,
       invalid: false,
     });
   });

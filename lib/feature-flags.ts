@@ -24,24 +24,27 @@ function isFeatureEnabled(
 
 /**
  * Parses surface flags as a dependency graph and fails closed for invalid
- * combinations. Vercel Preview enables V2 by default; every other environment
- * stays legacy unless explicitly enabled. An explicit value always wins.
+ * combinations. Released Vercel deployments enable V2 by default; local and
+ * test environments stay legacy unless explicitly enabled. An explicit value
+ * always wins, so production can be rolled back without rebuilding.
  */
 export function getSurfaceFeatureFlags(
   environment: Readonly<Record<string, string | undefined>> = process.env,
 ): SurfaceFeatureFlags {
-  const previewDefault = environment.VERCEL_ENV === 'preview';
+  const releasedDefault =
+    environment.VERCEL_ENV === 'preview' ||
+    environment.VERCEL_ENV === 'production';
   const requestedMiniAppV2 = isFeatureEnabled(
     environment.MINI_APP_V2_ENABLED,
-    previewDefault,
+    releasedDefault,
   );
   const requestedSiteV2 = isFeatureEnabled(
     environment.SITE_V2_ENABLED,
-    previewDefault,
+    releasedDefault,
   );
   const requestedAdminV2 = isFeatureEnabled(
     environment.ADMIN_V2_ENABLED,
-    previewDefault,
+    releasedDefault,
   );
   const invalidReasons: string[] = [];
 
