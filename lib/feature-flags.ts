@@ -15,20 +15,34 @@ export type SurfaceFeatureFlags = {
   invalidReasons: readonly string[];
 };
 
-function isExplicitlyEnabled(value: string | undefined): boolean {
-  return value === 'true';
+function isFeatureEnabled(
+  value: string | undefined,
+  defaultEnabled: boolean,
+): boolean {
+  return value === undefined ? defaultEnabled : value === 'true';
 }
 
 /**
  * Parses surface flags as a dependency graph and fails closed for invalid
- * combinations. Values other than the exact string "true" are disabled.
+ * combinations. Vercel Preview enables V2 by default; every other environment
+ * stays legacy unless explicitly enabled. An explicit value always wins.
  */
 export function getSurfaceFeatureFlags(
   environment: Readonly<Record<string, string | undefined>> = process.env,
 ): SurfaceFeatureFlags {
-  const requestedMiniAppV2 = isExplicitlyEnabled(environment.MINI_APP_V2_ENABLED);
-  const requestedSiteV2 = isExplicitlyEnabled(environment.SITE_V2_ENABLED);
-  const requestedAdminV2 = isExplicitlyEnabled(environment.ADMIN_V2_ENABLED);
+  const previewDefault = environment.VERCEL_ENV === 'preview';
+  const requestedMiniAppV2 = isFeatureEnabled(
+    environment.MINI_APP_V2_ENABLED,
+    previewDefault,
+  );
+  const requestedSiteV2 = isFeatureEnabled(
+    environment.SITE_V2_ENABLED,
+    previewDefault,
+  );
+  const requestedAdminV2 = isFeatureEnabled(
+    environment.ADMIN_V2_ENABLED,
+    previewDefault,
+  );
   const invalidReasons: string[] = [];
 
   if (requestedSiteV2 && !requestedMiniAppV2) {

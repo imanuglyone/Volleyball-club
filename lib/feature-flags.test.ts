@@ -11,6 +11,38 @@ describe('getSurfaceFeatureFlags', () => {
     });
   });
 
+  it('enables V2 by default only for Vercel Preview', () => {
+    expect(getSurfaceFeatureFlags({ VERCEL_ENV: 'preview' })).toMatchObject({
+      siteV2: true,
+      miniAppV2: true,
+      adminV2: true,
+      invalid: false,
+    });
+
+    expect(getSurfaceFeatureFlags({ VERCEL_ENV: 'production' })).toMatchObject({
+      siteV2: false,
+      miniAppV2: false,
+      adminV2: false,
+      invalid: false,
+    });
+  });
+
+  it('allows Preview defaults to be explicitly disabled', () => {
+    expect(
+      getSurfaceFeatureFlags({
+        VERCEL_ENV: 'preview',
+        MINI_APP_V2_ENABLED: 'false',
+        SITE_V2_ENABLED: 'false',
+        ADMIN_V2_ENABLED: 'false',
+      }),
+    ).toMatchObject({
+      siteV2: false,
+      miniAppV2: false,
+      adminV2: false,
+      invalid: false,
+    });
+  });
+
   it('only treats the exact string true as enabled', () => {
     expect(
       getSurfaceFeatureFlags({
