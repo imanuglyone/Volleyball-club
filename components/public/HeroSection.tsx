@@ -44,7 +44,6 @@ export function HeroSection() {
           </div>
         ))}
       </div>
-      <p className="public-hero__scroll" aria-hidden="true">Листай к игре <span/></p>
     </section>
   );
 }

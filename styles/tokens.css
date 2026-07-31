@@ -75,8 +75,8 @@
   --space-20: 80px;
   --space-24: 96px;
 
-  --container-site: 1440px;
-  --container-content: 1240px;
+  --container-site: 100%;
+  --container-content: 1600px;
   --container-app: 680px;
   --container-admin: 1380px;
 

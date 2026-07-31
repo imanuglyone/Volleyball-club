@@ -64,6 +64,36 @@ test('public hero loads the selected cobalt video progressively', async ({ page 
   );
 });
 
+test('public layout is full-bleed with single-layer emblems and clear connectors', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  const heroBox = await page.locator('.public-hero').boundingBox();
+  expect(heroBox).not.toBeNull();
+  expect(heroBox?.x).toBeLessThanOrEqual(1);
+  expect(heroBox?.width).toBeGreaterThanOrEqual(
+    (page.viewportSize()?.width ?? 0) - 1,
+  );
+
+  await expect(
+    page.locator('.public-emblem__core, .public-emblem__orbit, .public-emblem__dot'),
+  ).toHaveCount(0);
+
+  const connectorBoxes = await page.locator('.public-process__arrow').evaluateAll(
+    (connectors) =>
+      connectors.map((connector) => {
+        const rect = connector.getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      }),
+  );
+  expect(connectorBoxes).toHaveLength(2);
+  for (const box of connectorBoxes) {
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
 test('reduced motion keeps the public hero usable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');

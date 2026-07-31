@@ -8,14 +8,11 @@
 @keyframes mc-pulse { 50% { opacity: 0.5; } }
 @keyframes public-shimmer { from { transform: translateX(-110%); } to { transform: translateX(290%); } }
 @keyframes public-rise { from { transform: translateY(22px); } }
-@keyframes public-orbit { to { transform: rotate(360deg); } }
 @keyframes public-breathe { 50% { opacity: .62; transform: scale(1.035); } }
 
 .mc-reveal { animation: mc-reveal var(--motion-slow) var(--ease-enter) both; }
 .mc-reveal--delay { animation-delay: 120ms; }
 .public-reveal { animation: public-rise 900ms var(--ease-enter) 80ms both; }
-.public-emblem__orbit--one { animation: public-orbit 22s linear infinite; }
-.public-emblem__orbit--two { animation: public-orbit 16s linear infinite reverse; }
 .public-final__rings { animation: public-breathe 9s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
