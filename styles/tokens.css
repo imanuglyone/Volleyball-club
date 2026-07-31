@@ -1,0 +1,95 @@
+:root {
+  color-scheme: dark;
+
+  --color-canvas: #080b12;
+  --color-canvas-deep: #05070c;
+  --color-surface-1: #0d1320;
+  --color-surface-2: #111a2b;
+  --color-surface-3: #172238;
+  --color-text-primary: #f3f1ea;
+  --color-text-secondary: #b9c3d1;
+  --color-text-muted: #7f8998;
+  --color-text-disabled: #5d6674;
+  --color-cobalt: #4d6bff;
+  --color-cobalt-bright: #6f88ff;
+  --color-cobalt-deep: #263caa;
+  --color-ice: #a7d8ff;
+  --color-ice-soft: #d9eeff;
+  --color-steel: #7f8998;
+  --color-success: #62d69b;
+  --color-danger: #ff6b7a;
+  --color-border-subtle: rgba(167, 216, 255, 0.09);
+  --color-border-default: rgba(167, 216, 255, 0.16);
+  --color-border-strong: rgba(167, 216, 255, 0.3);
+  --glass-bg: rgba(13, 19, 32, 0.74);
+  --glass-bg-strong: rgba(10, 15, 26, 0.92);
+  --glass-highlight: rgba(167, 216, 255, 0.08);
+  --shadow-panel: 0 28px 90px rgba(1, 5, 14, 0.44);
+  --shadow-cobalt: 0 18px 60px rgba(77, 107, 255, 0.22);
+
+  /* Compatibility aliases while legacy surfaces move to the V2 token names. */
+  --color-violet: var(--color-cobalt);
+  --color-violet-bright: var(--color-cobalt-bright);
+  --color-violet-soft: var(--color-ice);
+  --color-violet-deep: var(--color-cobalt-deep);
+  --shadow-violet: var(--shadow-cobalt);
+
+  --gradient-hero:
+    radial-gradient(circle at 72% 30%, rgba(77, 107, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 42% 105%, rgba(167, 216, 255, 0.09), transparent 44%),
+    linear-gradient(125deg, #080b12 0%, #0d1320 62%, #111c32 100%);
+  --gradient-panel: linear-gradient(145deg, rgba(167, 216, 255, 0.065), rgba(167, 216, 255, 0.012));
+  --gradient-button: linear-gradient(135deg, #4d6bff, #6d86ff);
+
+  --font-ui: var(--font-manrope), Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-unbounded), Unbounded, var(--font-ui);
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --text-display-xl: clamp(4rem, 10vw, 9.5rem);
+  --text-display-lg: clamp(3rem, 7vw, 6rem);
+  --text-h1: clamp(2.6rem, 6vw, 5rem);
+  --text-h2: clamp(2.1rem, 4vw, 4rem);
+  --text-h3: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-micro: 0.6875rem;
+
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  --container-site: 100%;
+  --container-content: 1600px;
+  --container-app: 680px;
+  --container-admin: 1380px;
+
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --motion-slow: 700ms;
+  --motion-ambient: 12000ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+
+  --safe-top: max(env(safe-area-inset-top), var(--tg-safe-area-inset-top, 0px));
+  --safe-right: max(env(safe-area-inset-right), var(--tg-safe-area-inset-right, 0px));
+  --safe-bottom: max(env(safe-area-inset-bottom), var(--tg-safe-area-inset-bottom, 0px));
+  --safe-left: max(env(safe-area-inset-left), var(--tg-safe-area-inset-left, 0px));
+}

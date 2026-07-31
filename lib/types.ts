@@ -16,6 +16,7 @@ export type Profile = {
   last_name: string | null;
   display_name: string;
   phone: string | null;
+  phone_verified_at?: string | null;
   photo_url: string | null;
 };
 
@@ -24,7 +25,7 @@ export type PublicBooking = {
   name: string;
 };
 
-export type TrainingStats = {
+export type TrainingSummary = {
   id: string;
   date: string;
   start_time: string;
@@ -34,9 +35,12 @@ export type TrainingStats = {
   location_name?: string | null;
   address?: string | null;
   is_active: boolean;
-  created_at: string;
   active_bookings: number;
   total_bookings: number;
   remaining: number;
+};
+
+export type TrainingStats = TrainingSummary & {
+  created_at: string;
   public_bookings?: PublicBooking[];
 };

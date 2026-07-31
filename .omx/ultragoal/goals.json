@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "objective": "Complete the Avangard Global V2 implementation described by .omx/plans/avangard-global-v2.md and prove it with tests, build, independent review, and adversarial QA.",
+  "codexGoalMode": "aggregate",
+  "stories": [
+    {"id": "G001", "title": "Design, snapshot, and foundation", "status": "in_progress"},
+    {"id": "G002", "title": "Expand schema and versioned services", "status": "pending"},
+    {"id": "G003", "title": "Mini App route migration and UX", "status": "pending"},
+    {"id": "G004", "title": "Public site", "status": "pending"},
+    {"id": "G005", "title": "Admin, privacy, and release gate", "status": "pending"}
+  ]
+}

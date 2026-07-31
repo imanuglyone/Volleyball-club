@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { PUBLIC_SCHEDULE_CACHE } from '@/lib/public-api';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const db = createSupabaseAdminClient();
-  const { data: training, error } = await db.from('trainings_stats').select('*').eq('id', params.id).single();
+  const { data: training, error } = await db.from('trainings_stats')
+    .select('id,date,start_time,end_time,price,capacity,location_name,address,is_active,remaining,active_bookings,total_bookings')
+    .eq('id', id).single();
   if (error || !training) return NextResponse.json({ error: 'not_found' }, { status: 404 });
-  const { data: bookings } = await db.from('bookings').select('id,name').eq('training_id', params.id).eq('status', 'active').order('created_at');
   return NextResponse.json(
-    { ...training, public_bookings: bookings ?? [] },
-    { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+    { ...training, public_bookings: [] },
+    { headers: { 'Cache-Control': PUBLIC_SCHEDULE_CACHE } }
   );
 }

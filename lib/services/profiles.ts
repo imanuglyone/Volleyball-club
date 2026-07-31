@@ -17,3 +17,20 @@ export async function upsertTelegramProfile(db: SupabaseClient, user: TelegramUs
   if (error) throw error;
   return data as Profile;
 }
+
+export async function verifyTelegramContactAndClaim(
+  db: SupabaseClient,
+  input: { telegramUserId: number; phone: string; phoneNormalized: string }
+) {
+  const { data, error } = await db.rpc('verify_contact_and_claim_web_bookings', {
+    p_telegram_user_id: input.telegramUserId,
+    p_phone: input.phone,
+    p_phone_normalized: input.phoneNormalized
+  });
+  if (error) throw error;
+  const result = Array.isArray(data) ? data[0] : data;
+  return {
+    claimed: Number(result?.claimed ?? 0),
+    conflicts: Number(result?.conflicts ?? 0)
+  };
+}

@@ -6,6 +6,13 @@ export type TelegramUser = {
   photo_url?: string;
 };
 
+export type TelegramContact = {
+  phone_number: string;
+  first_name: string;
+  last_name?: string;
+  user_id?: number;
+};
+
 export type TelegramWebApp = {
   initData: string;
   initDataUnsafe?: { user?: TelegramUser };

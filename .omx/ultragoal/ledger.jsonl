@@ -1,0 +1,2 @@
+{"event":"created","at":"2026-07-30T18:05:54Z","plan":".omx/plans/avangard-global-v2.md","evidence":"Architect APPROVE followed by Critic APPROVE"}
+{"event":"steering","at":"2026-07-31T03:40:00Z","kind":"revise_visual_contract","evidence":"User selected the dark ice-cobalt direction","details":{"canvas":"#080B12","surface":"#0D1320","off_white":"#F3F1EA","cobalt":"#4D6BFF","ice_blue":"#A7D8FF","steel":"#7F8998","semantic_only":["red","green"],"forbidden":["lime","purple"]}}

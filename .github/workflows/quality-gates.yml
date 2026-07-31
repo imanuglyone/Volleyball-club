@@ -1,0 +1,129 @@
+name: Quality gates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PGPASSWORD: postgres
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3101
+      MINI_APP_V2_ENABLED: "true"
+      SITE_V2_ENABLED: "true"
+      ADMIN_V2_ENABLED: "true"
+      NEXT_PUBLIC_TELEGRAM_DEV_MODE: "true"
+      ALLOW_TURNSTILE_MOCK: "true"
+      TURNSTILE_MOCK_TOKEN: "e2e-turnstile-token"
+      NEXT_PUBLIC_TURNSTILE_MOCK_TOKEN: "e2e-turnstile-token"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clean-database migration contract
+        shell: bash
+        run: |
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d postgres <<'SQL'
+          create role anon noinherit;
+          create role authenticated noinherit;
+          create role service_role noinherit bypassrls;
+          SQL
+          createdb -h 127.0.0.1 -U postgres avangard_clean
+          for migration in sql/00*.sql; do
+            psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_clean -f "$migration"
+          done
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_clean -f sql/tests/008_contract_assertions.sql
+
+      - name: Duplicate-shape migration contract
+        shell: bash
+        run: |
+          createdb -h 127.0.0.1 -U postgres avangard_duplicate
+          for migration in \
+            sql/001_init.sql \
+            sql/002_add_location.sql \
+            sql/003_refresh_trainings_stats.sql \
+            sql/004_cleanup_bookings.sql \
+            sql/005_telegram_mini_app.sql \
+            sql/005a_legacy_production_compat.sql \
+            sql/006_fix_profile_booking_phone_normalized.sql \
+            sql/007_allow_rebooking_after_cancellation.sql; do
+            psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_duplicate -f "$migration"
+          done
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_duplicate -f sql/tests/008_duplicate_preflight_fixture.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_duplicate -f sql/008_avangard_v2.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_duplicate -f sql/tests/008_contract_assertions.sql
+
+      - name: Legacy security migration contract
+        shell: bash
+        run: |
+          createdb -h 127.0.0.1 -U postgres avangard_legacy_security
+          for migration in \
+            sql/001_init.sql \
+            sql/002_add_location.sql \
+            sql/003_refresh_trainings_stats.sql \
+            sql/004_cleanup_bookings.sql \
+            sql/005_telegram_mini_app.sql \
+            sql/005a_legacy_production_compat.sql \
+            sql/006_fix_profile_booking_phone_normalized.sql \
+            sql/007_allow_rebooking_after_cancellation.sql; do
+            psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_legacy_security -f "$migration"
+          done
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_legacy_security -f sql/tests/008_legacy_security_fixture.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_legacy_security -f sql/008_avangard_v2.sql
+          psql -v ON_ERROR_STOP=1 -h 127.0.0.1 -U postgres -d avangard_legacy_security -f sql/tests/008_contract_assertions.sql
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Unit and service tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Bundle and poster budgets
+        run: npm run check:bundle
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Route and accessibility tests
+        run: npm run test:e2e
+
+      # next dev writes to .next during Playwright and replaces the production
+      # output created above. Restore it before LHCI starts `next start`.
+      - name: Rebuild production output for Lighthouse
+        run: npm run build
+
+      - name: Lighthouse budgets
+        run: npm run test:perf

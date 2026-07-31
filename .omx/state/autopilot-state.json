@@ -1,0 +1,67 @@
+{
+  "mode": "autopilot",
+  "active": true,
+  "current_phase": "ultraqa",
+  "iteration": 1,
+  "review_cycle": 2,
+  "max_iterations": 10,
+  "phase_cycle": ["deep-interview", "ralplan", "ultragoal", "code-review", "ultraqa"],
+  "handoff_artifacts": {
+    "context_snapshot_path": ".omx/context/avangard-global-v2-20260730T180554Z.md",
+    "deep_interview": {
+      "path": ".omx/context/avangard-global-v2-20260730T180554Z.md",
+      "deep_interview_gate": {
+        "status": "complete",
+        "rationale": "The preceding structured planning conversation resolved every material product and implementation decision.",
+        "handoff_summary": "Implement the approved dark ice-cobalt public site, fast namespaced Mini App, admin redesign, secure web booking, Telegram contact claim, Irkutsk time handling, and phased rollout."
+      }
+    },
+    "ralplan": {
+      "path": ".omx/plans/avangard-global-v2.md"
+    },
+    "ralplan_consensus_gate": {
+      "required": true,
+      "sequence": ["architect-review", "critic-review"],
+      "planning_artifacts_are_not_consensus": true,
+      "required_review_roles": ["architect", "critic"],
+      "ralplan_architect_review": {
+        "agent_role": "architect",
+        "agent": "/root/ralplan_architect",
+        "verdict": "approve",
+        "evidence": "All route, cache, migration, token, identity, flag, rollback, and test blockers resolved."
+      },
+      "ralplan_critic_review": {
+        "agent_role": "critic",
+        "agent": "/root/ralplan_critic",
+        "verdict": "approve",
+        "evidence": "No remaining blocking inconsistencies, security/privacy gaps, migration hazards, rollout dependencies, or open implementer decisions."
+      },
+      "complete": true
+    },
+    "ultragoal": null,
+    "code_review": {
+      "code_reviewer": {
+        "recommendation": "APPROVE",
+        "agent": "/root/code_review_lane"
+      },
+      "architect": {
+        "status": "CLEAR",
+        "agent": "/root/architect_review_lane"
+      }
+    },
+    "ultraqa": {
+      "status": "pass_with_release_blockers",
+      "scenario_matrix": ".omx/qa/ultraqa-scenario-matrix.md",
+      "report": ".omx/qa/ultraqa-report.md",
+      "evidence": {
+        "unit_tests": "39 passed",
+        "browser_tests": "51 passed, 9 intentional duplicate-project skips",
+        "bundle_gzip_kib": 119.5,
+        "dependency_vulnerabilities": 0
+      }
+    }
+  },
+  "review_verdict": "APPROVE",
+  "qa_verdict": "PASS_WITH_RELEASE_BLOCKERS",
+  "return_to_ralplan_reason": null
+}

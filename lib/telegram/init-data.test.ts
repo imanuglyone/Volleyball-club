@@ -22,4 +22,10 @@ describe('Telegram initData validation', () => {
     expect(() => validateTelegramInitData(tampered.toString(), 'token', 100, 1050)).toThrow();
     expect(() => validateTelegramInitData(data, 'token', 10, 1050)).toThrow('telegram_auth_expired');
   });
+
+  it('fails closed for malformed max-age configuration', () => {
+    const data = signed('token', { auth_date: '1000', user: JSON.stringify({ id: 42, first_name: 'Ира' }) });
+    expect(() => validateTelegramInitData(data, 'token', Number.NaN, 1050)).toThrow('telegram_auth_config_invalid');
+    expect(() => validateTelegramInitData(data, 'token', 0, 1050)).toThrow('telegram_auth_config_invalid');
+  });
 });

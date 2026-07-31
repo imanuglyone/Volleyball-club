@@ -15,27 +15,36 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
-  const response = NextResponse.next();
+  let response = NextResponse.next({ request });
 
   const supabase = createServerClient(url, anon, {
     cookies: {
-      get(name) {
-        return request.cookies.get(name)?.value;
+      getAll() {
+        return request.cookies.getAll();
       },
-      set(name, value, options) {
-        response.cookies.set({ name, value, ...options });
+      setAll(cookiesToSet, headersToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
+        response = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+        Object.entries(headersToSet).forEach(([name, value]) => {
+          response.headers.set(name, value);
+        });
       },
-      remove(name, options) {
-        response.cookies.set({ name, value: '', ...options });
-      }
-    }
+    },
   });
 
-  const { data } = await supabase.auth.getSession();
-  if (!data.session) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
+  response.headers.set('Cache-Control', 'private, no-store');
   return response;
 }
 

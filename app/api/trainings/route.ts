@@ -1,37 +1,44 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { todayDateString } from '@/lib/format';
-
-function isDateString(value: string | null) {
-  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
-}
+import { PUBLIC_SCHEDULE_CACHE } from '@/lib/public-api';
+import {
+  isValidClubDate,
+  normalizePublicTrainingRange,
+} from '@/lib/public-training-range';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const from = searchParams.get('from');
-  const to = searchParams.get('to');
+  const requestedFrom = searchParams.get('from');
+  const requestedTo = searchParams.get('to');
 
-  if (!isDateString(from) || !isDateString(to)) {
+  if (
+    !isValidClubDate(requestedFrom)
+    || !isValidClubDate(requestedTo)
+    || requestedTo < requestedFrom
+  ) {
     return NextResponse.json({ error: 'invalid_range' }, { status: 400 });
   }
+  const { from, to } = normalizePublicTrainingRange(
+    requestedFrom,
+    requestedTo,
+  );
 
   const supabase = createSupabaseAdminClient();
-  const today = todayDateString();
-
   const { data, error } = await supabase
     .from('trainings_stats')
-    .select('*')
+    .select('id,date,start_time,end_time,price,capacity,location_name,address,is_active,remaining,active_bookings,total_bookings')
     .eq('is_active', true)
-    .gte('date', today)
     .gte('date', from)
     .lte('date', to)
     .order('date')
     .order('start_time');
 
   if (error) {
-    console.error('Trainings range fetch failed', error);
+    console.error('Trainings range fetch failed', { kind: error.name ?? 'database' });
     return NextResponse.json({ error: 'server_error' }, { status: 500 });
   }
 
-  return NextResponse.json(data ?? []);
+  return NextResponse.json(data ?? [], {
+    headers: { 'Cache-Control': PUBLIC_SCHEDULE_CACHE }
+  });
 }

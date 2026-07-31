@@ -1,0 +1,22 @@
+{
+  "reference": "artifacts/visual-ralph/midnight-court/reference.png",
+  "implementation": "artifacts/screenshots/public-desktop-hero.png",
+  "comparison": "artifacts/visual-ralph/midnight-court/comparison-public-hero.png",
+  "overlay": "artifacts/visual-ralph/midnight-court/overlay-public-hero.png",
+  "pixel_difference": "artifacts/visual-ralph/midnight-court/diff-public-hero.png",
+  "score": 91,
+  "verdict": "pass",
+  "categories": {
+    "composition": 93,
+    "color_and_atmosphere": 94,
+    "typography": 92,
+    "visual_hierarchy": 93,
+    "reference_fidelity": 86,
+    "responsive_consistency": 90
+  },
+  "notes": [
+    "The implementation preserves the reference split composition: oversized left typography, volleyball focal object, dark court depth and violet action hierarchy.",
+    "The CSS-rendered volleyball is intentionally lighter than the photorealistic reference asset, while keeping the approved volumetric lighting and panel language without WebGL.",
+    "Mobile screens and the control room use the same token system, glass surfaces, court lines and one-accent palette rather than imitating the board as a single static mockup."
+  ]
+}
