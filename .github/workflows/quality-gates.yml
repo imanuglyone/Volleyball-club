@@ -120,5 +120,10 @@ jobs:
       - name: Route and accessibility tests
         run: npm run test:e2e
 
+      # next dev writes to .next during Playwright and replaces the production
+      # output created above. Restore it before LHCI starts `next start`.
+      - name: Rebuild production output for Lighthouse
+        run: npm run build
+
       - name: Lighthouse budgets
         run: npm run test:perf
