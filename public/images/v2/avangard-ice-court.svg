@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Ночная волейбольная площадка «Авангард»</title>
+  <desc id="desc">Абстрактная ледяно-синяя сцена с площадкой, сеткой и траекторией мяча.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#080B12"/>
+      <stop offset=".58" stop-color="#0D1320"/>
+      <stop offset="1" stop-color="#152447"/>
+    </linearGradient>
+    <radialGradient id="beam" cx=".66" cy=".32" r=".62">
+      <stop stop-color="#A7D8FF" stop-opacity=".38"/>
+      <stop offset=".36" stop-color="#4D6BFF" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#080B12" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floor" x1=".2" y1="0" x2=".8" y2="1">
+      <stop stop-color="#101A2D"/>
+      <stop offset=".55" stop-color="#0A0F1B"/>
+      <stop offset="1" stop-color="#15213A"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#A7D8FF" stop-opacity=".08"/>
+      <stop offset=".48" stop-color="#A7D8FF" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#4D6BFF" stop-opacity=".18"/>
+    </linearGradient>
+    <filter id="blur40"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="blur16"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="net" width="48" height="42" patternUnits="userSpaceOnUse" patternTransform="skewX(-10)">
+      <path d="M0 0h48v42H0z" fill="none" stroke="#A7D8FF" stroke-opacity=".18" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1100" fill="url(#sky)"/>
+  <rect width="1600" height="820" fill="url(#beam)"/>
+  <ellipse cx="1130" cy="260" rx="420" ry="210" fill="#4D6BFF" fill-opacity=".13" filter="url(#blur40)"/>
+  <path d="M-80 895 490 560h735l470 335-146 205H10Z" fill="url(#floor)"/>
+  <path d="m151 975 460-337h476l364 337M603 642 459 1080m628-438 160 438M804 641v439M310 856h1002M174 973h1273" fill="none" stroke="url(#line)" stroke-width="3"/>
+  <path d="M680 570h332v282H680z" fill="url(#net)" transform="skewY(-2)" opacity=".78"/>
+  <path d="M674 558v325m344-325v325M670 564h352" fill="none" stroke="#D9EEFF" stroke-opacity=".48" stroke-width="4"/>
+  <path d="M298 610C520 186 946 92 1274 268" fill="none" stroke="#A7D8FF" stroke-opacity=".34" stroke-width="3" stroke-dasharray="12 20"/>
+  <path d="M298 610C520 186 946 92 1274 268" fill="none" stroke="#4D6BFF" stroke-opacity=".16" stroke-width="18" filter="url(#blur16)"/>
+  <g transform="translate(1274 268)" filter="url(#glow)">
+    <circle r="32" fill="#F3F1EA" fill-opacity=".92"/>
+    <path d="M-25-5c15-5 28-3 42 7M-15 25C-8 11 1 2 17-7M-14-26C-2-15 5-4 6 12" fill="none" stroke="#4D6BFF" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <path d="M0 0h1600v1100H0z" fill="none" stroke="#A7D8FF" stroke-opacity=".08" stroke-width="2"/>
+  <path d="M0 920c360-140 734-168 1128-78 196 45 353 37 472-22v280H0Z" fill="#080B12" fill-opacity=".52"/>
+</svg>

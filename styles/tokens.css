@@ -1,56 +1,65 @@
 :root {
   color-scheme: dark;
 
-  --color-canvas: #060608;
-  --color-canvas-deep: #030305;
-  --color-surface-1: #0d0d11;
-  --color-surface-2: #131219;
-  --color-surface-3: #1a1721;
-  --color-text-primary: #f7f5f9;
-  --color-text-secondary: #b0acb6;
-  --color-text-muted: #817d88;
-  --color-text-disabled: #5f5b65;
-  --color-violet: #8d45ff;
-  --color-violet-bright: #a95cff;
-  --color-violet-soft: #d5b5ff;
-  --color-violet-deep: #3c176e;
-  --color-success: #75d7a1;
-  --color-danger: #e78591;
-  --color-border-subtle: rgba(255, 255, 255, 0.1);
-  --color-border-default: rgba(255, 255, 255, 0.16);
-  --color-border-strong: rgba(255, 255, 255, 0.26);
-  --glass-bg: rgba(15, 14, 20, 0.72);
-  --glass-bg-strong: rgba(18, 16, 24, 0.88);
-  --glass-highlight: rgba(255, 255, 255, 0.06);
-  --shadow-panel: 0 24px 80px rgba(0, 0, 0, 0.38);
-  --shadow-violet: 0 18px 60px rgba(122, 55, 255, 0.25);
+  --color-canvas: #080b12;
+  --color-canvas-deep: #05070c;
+  --color-surface-1: #0d1320;
+  --color-surface-2: #111a2b;
+  --color-surface-3: #172238;
+  --color-text-primary: #f3f1ea;
+  --color-text-secondary: #b9c3d1;
+  --color-text-muted: #7f8998;
+  --color-text-disabled: #5d6674;
+  --color-cobalt: #4d6bff;
+  --color-cobalt-bright: #6f88ff;
+  --color-cobalt-deep: #263caa;
+  --color-ice: #a7d8ff;
+  --color-ice-soft: #d9eeff;
+  --color-steel: #7f8998;
+  --color-success: #62d69b;
+  --color-danger: #ff6b7a;
+  --color-border-subtle: rgba(167, 216, 255, 0.09);
+  --color-border-default: rgba(167, 216, 255, 0.16);
+  --color-border-strong: rgba(167, 216, 255, 0.3);
+  --glass-bg: rgba(13, 19, 32, 0.74);
+  --glass-bg-strong: rgba(10, 15, 26, 0.92);
+  --glass-highlight: rgba(167, 216, 255, 0.08);
+  --shadow-panel: 0 28px 90px rgba(1, 5, 14, 0.44);
+  --shadow-cobalt: 0 18px 60px rgba(77, 107, 255, 0.22);
+
+  /* Compatibility aliases while legacy surfaces move to the V2 token names. */
+  --color-violet: var(--color-cobalt);
+  --color-violet-bright: var(--color-cobalt-bright);
+  --color-violet-soft: var(--color-ice);
+  --color-violet-deep: var(--color-cobalt-deep);
+  --shadow-violet: var(--shadow-cobalt);
 
   --gradient-hero:
-    radial-gradient(circle at 72% 42%, rgba(151, 72, 255, 0.26), transparent 28%),
-    radial-gradient(circle at 42% 110%, rgba(101, 39, 201, 0.22), transparent 42%),
-    linear-gradient(120deg, #050507 0%, #090a10 55%, #090711 100%);
-  --gradient-panel: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012));
-  --gradient-button: linear-gradient(135deg, #7d36eb 0%, #a14fff 100%);
+    radial-gradient(circle at 72% 30%, rgba(77, 107, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 42% 105%, rgba(167, 216, 255, 0.09), transparent 44%),
+    linear-gradient(125deg, #080b12 0%, #0d1320 62%, #111c32 100%);
+  --gradient-panel: linear-gradient(145deg, rgba(167, 216, 255, 0.065), rgba(167, 216, 255, 0.012));
+  --gradient-button: linear-gradient(135deg, #4d6bff, #6d86ff);
 
   --font-ui: var(--font-manrope), Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: var(--font-unbounded), Unbounded, var(--font-ui);
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
 
   --text-display-xl: clamp(4rem, 10vw, 9.5rem);
   --text-display-lg: clamp(3rem, 7vw, 6rem);
-  --text-display-mobile: clamp(2.5rem, 12vw, 4rem);
-  --text-h1: clamp(2.4rem, 6vw, 4.5rem);
-  --text-h2: clamp(2rem, 4vw, 3.6rem);
+  --text-h1: clamp(2.6rem, 6vw, 5rem);
+  --text-h2: clamp(2.1rem, 4vw, 4rem);
   --text-h3: 1.5rem;
   --text-body-lg: 1.125rem;
   --text-body: 1rem;
   --text-small: 0.875rem;
-  --text-micro: 0.625rem;
+  --text-micro: 0.6875rem;
 
   --radius-xs: 8px;
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 22px;
-  --radius-xl: 30px;
+  --radius-xl: 28px;
   --radius-pill: 999px;
 
   --space-1: 4px;
@@ -67,14 +76,14 @@
   --space-24: 96px;
 
   --container-site: 1440px;
-  --container-content: 1180px;
+  --container-content: 1240px;
   --container-app: 680px;
   --container-admin: 1380px;
 
   --motion-fast: 160ms;
-  --motion-base: 260ms;
-  --motion-slow: 600ms;
-  --motion-ambient: 8000ms;
+  --motion-base: 280ms;
+  --motion-slow: 700ms;
+  --motion-ambient: 12000ms;
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);

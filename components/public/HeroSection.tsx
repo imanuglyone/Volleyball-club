@@ -1,27 +1,48 @@
 import Link from 'next/link';
-import { ArrowRight, CalendarCheck, MapPin, UsersRound } from 'lucide-react';
-import { HeroVolleyball } from '@/components/visuals/HeroVolleyball';
-import { buttonClassName } from '@/components/ui/Button';
+import { ArrowIcon, BallIcon, ClockIcon, TeamIcon } from '@/components/icons/AvangardIcons';
 
 const signals = [
-  { icon: CalendarCheck, title: 'Живые тренировки', text: 'каждую неделю' },
-  { icon: UsersRound, title: 'Реальные люди', text: 'и атмосфера' },
-  { icon: MapPin, title: 'Простая запись', text: 'за минуту' }
+  { icon: ClockIcon, value: '60 сек', label: 'на запись' },
+  { icon: TeamIcon, value: 'Живой', label: 'состав игроков' },
+  { icon: BallIcon, value: 'Каждую', label: 'неделю' }
 ];
 
 export function HeroSection() {
-  return <section className="public-hero">
-    <div className="public-hero__copy mc-reveal">
-      <p className="public-kicker">Ангарск · 2026</p>
-      <h1>Твоя игра.<br/>Твоя <em>команда.</em></h1>
-      <p className="public-hero__lead">Живой волейбол по вечерам для тех, кто любит игру, движение и команду.</p>
-      <div className="public-hero__actions">
-        <Link href="/app" className={buttonClassName({ size: 'lg' })}>Открыть приложение <ArrowRight size={18}/></Link>
-        <Link href="/schedule" className={buttonClassName({ variant: 'secondary', size: 'lg' })}>Смотреть расписание</Link>
+  return (
+    <section className="public-hero" aria-labelledby="public-hero-title">
+      <div className="public-hero__media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 620px)" srcSet="/images/v2/avangard-hero-poster-cobalt-mobile.webp"/>
+          <img
+            src="/images/v2/avangard-hero-poster-cobalt.webp"
+            alt=""
+            width="1599"
+            height="900"
+            fetchPriority="high"
+            className="public-hero__poster"
+          />
+        </picture>
+        <div className="public-hero__media-shade"/>
+        <div className="public-hero__trajectory"><i/><i/><i/></div>
       </div>
-    </div>
-    <HeroVolleyball/>
-    <div className="public-net" aria-hidden="true"><i/><i/><i/><i/><i/></div>
-    <div className="public-hero__signals">{signals.map(({ icon: Icon, title, text }) => <div key={title}><span><Icon size={18}/></span><p><strong>{title}</strong><small>{text}</small></p></div>)}</div>
-  </section>;
+      <div className="public-hero__copy public-reveal">
+        <p className="public-kicker"><span/> Волейбольный клуб · Ангарск</p>
+        <h1 id="public-hero-title">Твоя<br/>игра —<br/><em>вперёд.</em></h1>
+        <p className="public-hero__lead">Вечерние тренировки для тех, кто любит движение, команду и честную игру без лишней суеты.</p>
+        <div className="public-hero__actions">
+          <a className="public-button" href="#schedule">Выбрать тренировку <ArrowIcon size={19}/></a>
+          <Link className="public-text-link" href="/app">Я уже в клубе <ArrowIcon size={18}/></Link>
+        </div>
+      </div>
+      <div className="public-hero__signals" aria-label="О клубе в цифрах">
+        {signals.map(({ icon: Icon, value, label }) => (
+          <div key={value + label}>
+            <Icon size={20}/>
+            <p><strong>{value}</strong><span>{label}</span></p>
+          </div>
+        ))}
+      </div>
+      <p className="public-hero__scroll" aria-hidden="true">Листай к игре <span/></p>
+    </section>
+  );
 }

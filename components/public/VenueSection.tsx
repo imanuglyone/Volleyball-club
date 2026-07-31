@@ -1,10 +1,23 @@
-import Link from 'next/link';
-import { ArrowUpRight, MapPin } from 'lucide-react';
-import { SectionLabel } from '@/components/ui/SectionLabel';
+import { ArrowIcon, PinIcon } from '@/components/icons/AvangardIcons';
+import { Emblem } from './Emblem';
+import { SectionMarker } from './SectionMarker';
 
 export function VenueSection() {
-  return <section className="public-venue">
-    <div className="public-venue__media" aria-hidden="true"><div className="public-court-lines"/><span>COURT<br/><em>IS READY</em></span></div>
-    <div className="public-venue__copy"><SectionLabel>04 / Площадка</SectionLabel><MapPin size={27}/><h2>В центре<br/>движения</h2><p>Удобные залы, понятные адреса и актуальная вместимость. Ты заранее знаешь, куда идти и кто будет рядом.</p><Link href="/schedule">Найти тренировку <ArrowUpRight size={17}/></Link></div>
-  </section>;
+  return (
+    <section className="public-venue" id="venue" aria-labelledby="venue-title">
+      <div className="public-venue__scene" aria-hidden="true">
+        <div className="public-venue__light"/>
+        <div className="public-venue__court"><i/><i/><i/></div>
+        <Emblem variant="pin" size="lg" label="Метка площадки с волейбольным кортом"/>
+        <p>ANGARSK<br/><em>COURT</em></p>
+      </div>
+      <div className="public-venue__copy">
+        <SectionMarker index="05">Площадка</SectionMarker>
+        <PinIcon size={30}/>
+        <h2 id="venue-title">Ты знаешь,<br/>куда <em>идти.</em></h2>
+        <p>Название зала и точный адрес указаны в каждой тренировке. Нажми на адрес — маршрут откроется в картах.</p>
+        <a className="public-text-link" href="#schedule">Смотреть площадки <ArrowIcon size={18}/></a>
+      </div>
+    </section>
+  );
 }

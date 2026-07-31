@@ -6,6 +6,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { trainingSchema } from '@/lib/validators';
 import { formatDate, formatTimeRange } from '@/lib/format';
 import { sendTelegramMessage } from '@/lib/telegram';
+import { invalidateTrainingCache } from '@/lib/cache-tags';
 
 function parseTrainingForm(formData: FormData) {
   const raw = {
@@ -30,12 +31,17 @@ export async function createTraining(formData: FormData) {
   }
 
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from('trainings').insert(parsed.data);
-  if (error) {
-    console.error('Create training failed', error);
+  const { data, error } = await supabase
+    .from('trainings')
+    .insert(parsed.data)
+    .select('id')
+    .single();
+  if (error || !data) {
+    console.error('Create training failed', { code: error?.code ?? 'empty' });
     throw new Error('Create training failed');
   }
 
+  invalidateTrainingCache(data.id);
   revalidatePath('/admin');
 }
 
@@ -49,10 +55,11 @@ export async function updateTraining(id: string, formData: FormData) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from('trainings').update(parsed.data).eq('id', id);
   if (error) {
-    console.error('Update training failed', error);
+    console.error('Update training failed', { code: error.code });
     throw new Error('Update training failed');
   }
 
+  invalidateTrainingCache(id);
   revalidatePath('/admin');
   revalidatePath(`/admin/trainings/${id}/edit`);
 }
@@ -62,10 +69,11 @@ export async function deleteTraining(id: string) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from('trainings').delete().eq('id', id);
   if (error) {
-    console.error('Delete training failed', error);
+    console.error('Delete training failed', { code: error.code });
     throw new Error('Delete training failed');
   }
 
+  invalidateTrainingCache(id);
   revalidatePath('/admin');
 }
 
@@ -74,10 +82,11 @@ export async function toggleTrainingActive(id: string, nextState: boolean) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from('trainings').update({ is_active: nextState }).eq('id', id);
   if (error) {
-    console.error('Toggle training failed', error);
+    console.error('Toggle training failed', { code: error.code });
     throw new Error('Toggle training failed');
   }
 
+  invalidateTrainingCache(id);
   revalidatePath('/admin');
 }
 
@@ -87,7 +96,7 @@ export async function cancelBooking(bookingId: string) {
 
   const { data: booking } = await supabase
     .from('bookings')
-    .select('id, name, phone, status, trainings:trainings(date, start_time, end_time)')
+    .select('id, training_id, name, phone, status, trainings:trainings(date, start_time, end_time)')
     .eq('id', bookingId)
     .single();
 
@@ -95,11 +104,24 @@ export async function cancelBooking(bookingId: string) {
     return;
   }
 
-  const { error } = await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId);
+  const { data: cancelled, error } = await supabase
+    .from('bookings')
+    .update({
+      status: 'cancelled',
+      manage_token_hash: null,
+      manage_token_expires_at: null,
+      cancel_idempotency_hash: null,
+      cancel_idempotency_expires_at: null,
+    })
+    .eq('id', bookingId)
+    .eq('status', 'active')
+    .select('id')
+    .maybeSingle();
   if (error) {
-    console.error('Cancel booking failed', error);
+    console.error('Cancel booking failed', { code: error.code });
     throw new Error('Cancel booking failed');
   }
+  if (!cancelled) return;
 
   const training = Array.isArray(booking.trainings) ? booking.trainings[0] : booking.trainings;
   if (training) {
@@ -110,5 +132,23 @@ export async function cancelBooking(bookingId: string) {
     await sendTelegramMessage(text);
   }
 
+  invalidateTrainingCache(booking.training_id);
+  revalidatePath('/admin');
+}
+
+export async function anonymizeProfile(profileId: string) {
+  await requireAdminSession();
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.rpc('anonymize_profile', {
+    p_profile_id: profileId,
+  });
+  if (error) {
+    console.error('Profile anonymization failed', { code: error.code });
+    throw new Error(
+      error.message.includes('profile_has_active_bookings')
+        ? 'Profile has active bookings'
+        : 'Profile anonymization failed',
+    );
+  }
   revalidatePath('/admin');
 }

@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "updated_at": "2026-07-31",
+  "palette": {
+    "canvas": "#080B12",
+    "surface": "#0D1320",
+    "off_white": "#F3F1EA",
+    "cobalt": "#4D6BFF",
+    "ice": "#A7D8FF",
+    "steel": "#7F8998"
+  },
+  "brand": [
+    {
+      "id": "avangard-mark",
+      "path": "/brand/avangard-mark.svg",
+      "format": "svg",
+      "status": "active",
+      "usage": "Standalone brand mark and external exports"
+    }
+  ],
+  "posters": [
+    {
+      "id": "hero-desktop-cobalt",
+      "path": "/images/v2/avangard-hero-poster-cobalt.webp",
+      "format": "webp",
+      "dimensions": "1599x900",
+      "status": "active",
+      "usage": "Desktop hero poster and video fallback"
+    },
+    {
+      "id": "hero-mobile-cobalt",
+      "path": "/images/v2/avangard-hero-poster-cobalt-mobile.webp",
+      "format": "webp",
+      "dimensions": "631x1365",
+      "status": "active",
+      "usage": "Mobile hero poster and video fallback"
+    },
+    {
+      "id": "open-graph-cobalt",
+      "path": "/images/v2/avangard-og-cobalt.webp",
+      "format": "webp",
+      "dimensions": "1200x630",
+      "status": "active",
+      "usage": "Open Graph and social sharing"
+    },
+    {
+      "id": "ice-court-vector",
+      "path": "/images/v2/avangard-ice-court.svg",
+      "format": "svg",
+      "dimensions": "1600x1100",
+      "status": "active",
+      "usage": "Lightweight static fallback and management pages"
+    }
+  ],
+  "emblems": [
+    {
+      "id": "ball",
+      "path": "/images/v2/emblems/ball.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 19812,
+      "status": "active"
+    },
+    {
+      "id": "community",
+      "path": "/images/v2/emblems/community.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 21022,
+      "status": "active"
+    },
+    {
+      "id": "court",
+      "path": "/images/v2/emblems/court.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 26860,
+      "status": "active"
+    },
+    {
+      "id": "calendar",
+      "path": "/images/v2/emblems/calendar.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 26124,
+      "status": "active"
+    },
+    {
+      "id": "ticket-check",
+      "path": "/images/v2/emblems/ticket-check.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 26300,
+      "status": "active"
+    },
+    {
+      "id": "clock",
+      "path": "/images/v2/emblems/clock.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 24546,
+      "status": "active"
+    },
+    {
+      "id": "location",
+      "path": "/images/v2/emblems/location.webp",
+      "format": "webp",
+      "dimensions": "720x720",
+      "bytes": 20424,
+      "status": "active"
+    }
+  ],
+  "source_assets": [
+    {
+      "id": "hero-desktop-cobalt-source",
+      "path": ".omx/assets/source-posters/avangard-hero-poster-cobalt.png",
+      "format": "png",
+      "status": "archived",
+      "runtime": false
+    },
+    {
+      "id": "hero-mobile-cobalt-source",
+      "path": ".omx/assets/source-posters/avangard-hero-poster-cobalt-mobile.png",
+      "format": "png",
+      "status": "archived",
+      "runtime": false
+    },
+    {
+      "id": "hero-lime-exploration",
+      "path": ".omx/assets/source-posters/avangard-hero-poster.png",
+      "format": "png",
+      "status": "archived",
+      "runtime": false,
+      "usage": "Superseded exploration; do not ship in V2"
+    }
+  ],
+  "reference_assets": [
+    {
+      "id": "icon-sheet-ice-cobalt",
+      "path": ".omx/assets/reference/icon-sheet-ice-cobalt.png",
+      "format": "png",
+      "status": "reference-only",
+      "runtime": false,
+      "usage": "Visual reference only; runtime navigation continues to use the code-clean SVG icon set"
+    }
+  ],
+  "code_assets": [
+    {
+      "id": "brand-components",
+      "path": "components/brand",
+      "status": "active"
+    },
+    {
+      "id": "flat-icon-set",
+      "path": "components/icons/AvangardIcons.tsx",
+      "count": 12,
+      "status": "active"
+    },
+    {
+      "id": "section-emblems",
+      "path": "components/public/Emblem.tsx",
+      "count": 7,
+      "status": "active"
+    }
+  ],
+  "expected_gemini_exports": [
+    "/images/v2/avangard-hero-desktop.webm",
+    "/images/v2/avangard-hero-desktop.mp4",
+    "/images/v2/avangard-hero-mobile.webm",
+    "/images/v2/avangard-hero-mobile.mp4",
+    "/images/v2/avangard-episode-team.webm",
+    "/images/v2/avangard-episode-team.mp4",
+    "/images/v2/avangard-episode-court.webm",
+    "/images/v2/avangard-episode-court.mp4"
+  ]
+}

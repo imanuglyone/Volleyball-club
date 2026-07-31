@@ -1,9 +1,21 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export function createProfileBooking(db: SupabaseClient, input: { trainingId: string; profileId: string; name: string; phone: string }) {
-  return db.rpc('create_profile_booking', {
-    p_training_id: input.trainingId, p_profile_id: input.profileId,
-    p_name: input.name, p_phone: input.phone
+export function createProfileBookingV2(
+  db: SupabaseClient,
+  input: {
+    trainingId: string;
+    profileId: string;
+    name: string;
+    phone: string;
+    consentVersion: string;
+  }
+) {
+  return db.rpc('create_profile_booking_v2', {
+    p_training_id: input.trainingId,
+    p_profile_id: input.profileId,
+    p_name: input.name,
+    p_phone: input.phone,
+    p_consent_version: input.consentVersion
   });
 }
 

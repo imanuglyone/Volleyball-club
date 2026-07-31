@@ -2,12 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { TrainingStats } from '@/lib/types';
-import { todayDateString } from '@/lib/format';
+import { addClubDays, clubDateString } from '@/lib/club-time';
 import { TrainingCard } from './TrainingCard';
 import { EmptyState, ErrorState, LoadingState } from './States';
 import { isVisualPreview, visualTrainingFixtures } from '@/lib/visual-preview';
-
-function addDays(days: number) { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0, 10); }
 
 export function TrainingFeed({ limit, surface = 'app' }: { limit?: number; surface?: 'app' | 'public' }) {
   const [items, setItems] = useState<TrainingStats[]>([]); const [loading, setLoading] = useState(true); const [failed, setFailed] = useState(false);
@@ -15,7 +13,7 @@ export function TrainingFeed({ limit, surface = 'app' }: { limit?: number; surfa
   const load = useCallback(async () => {
     setLoading(true); setFailed(false);
     if (isVisualPreview()) { setItems(visualTrainingFixtures); setLoading(false); return; }
-    try { const r = await fetch(`/api/trainings?from=${todayDateString()}&to=${addDays(45)}`); if (!r.ok) throw new Error(); setItems(await r.json()); }
+    try { const from = clubDateString(); const r = await fetch(`/api/trainings?from=${from}&to=${addClubDays(from, 45)}`); if (!r.ok) throw new Error(); setItems(await r.json()); }
     catch { setFailed(true); } finally { setLoading(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);

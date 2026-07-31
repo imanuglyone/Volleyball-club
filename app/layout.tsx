@@ -1,23 +1,41 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
+import { Manrope, Unbounded } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
-import Script from 'next/script';
-import { Manrope } from 'next/font/google';
-import { TelegramProvider } from '@/components/telegram/TelegramProvider';
-import { AppShell } from '@/components/app/AppShell';
 
-const manrope = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--font-manrope', display: 'swap' });
+const manrope = Manrope({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
+
+const unbounded = Unbounded({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-unbounded',
+  display: 'swap',
+  weight: ['500', '600', '700'],
+});
+
+const applicationUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.trim() || 'http://localhost:3000';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(applicationUrl),
   title: 'Авангард — волейбольный клуб в Ангарске',
-  description: 'Живые волейбольные тренировки в Ангарске. Выберите дату, займите место и выходите на площадку.'
+  description:
+    'Живые волейбольные тренировки в Ангарске. Выберите дату, займите место и выходите на площадку.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="ru" className={manrope.variable}>
+    <html lang="ru" className={`${manrope.variable} ${unbounded.variable}`}>
       <body>
-        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-        <TelegramProvider><AppShell>{children}</AppShell></TelegramProvider>
+        {children}
+        <SpeedInsights />
       </body>
     </html>
   );

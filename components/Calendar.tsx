@@ -9,15 +9,15 @@ function pad(value: number) {
 }
 
 export function formatDateKey(date: Date) {
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
 }
 
 function getMonthMeta(current: Date) {
-  const year = current.getFullYear();
-  const month = current.getMonth();
-  const first = new Date(year, month, 1);
-  const firstWeekday = (first.getDay() + 6) % 7;
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const year = current.getUTCFullYear();
+  const month = current.getUTCMonth();
+  const first = new Date(Date.UTC(year, month, 1));
+  const firstWeekday = (first.getUTCDay() + 6) % 7;
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
   const totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
 
   const cells = Array.from({ length: totalCells }, (_, index) => {
@@ -25,7 +25,7 @@ function getMonthMeta(current: Date) {
     if (dayNumber < 1 || dayNumber > daysInMonth) {
       return null;
     }
-    return new Date(year, month, dayNumber);
+    return new Date(Date.UTC(year, month, dayNumber));
   });
 
   return { year, month, cells };
@@ -41,7 +41,11 @@ type CalendarProps = {
 
 export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthChange }: CalendarProps) {
   const { year, month: monthIndex, cells } = useMemo(() => getMonthMeta(month), [month]);
-  const title = new Intl.DateTimeFormat('ru-RU', { month: 'long', year: 'numeric' }).format(month);
+  const title = new Intl.DateTimeFormat('ru-RU', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(month);
 
   return (
     <div className="card calendar-shell p-4 animate-fade-up">
@@ -49,7 +53,7 @@ export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthCh
         <button
           type="button"
           className="btn-ghost"
-          onClick={() => onMonthChange(new Date(year, monthIndex - 1, 1))}
+          onClick={() => onMonthChange(new Date(Date.UTC(year, monthIndex - 1, 1)))}
         >
           {'\u041f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0439'}
         </button>
@@ -57,7 +61,7 @@ export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthCh
         <button
           type="button"
           className="btn-ghost"
-          onClick={() => onMonthChange(new Date(year, monthIndex + 1, 1))}
+          onClick={() => onMonthChange(new Date(Date.UTC(year, monthIndex + 1, 1)))}
         >
           {'\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0439'}
         </button>
@@ -94,7 +98,7 @@ export function Calendar({ month, selectedDate, markedDates, onSelect, onMonthCh
               }`}
             >
               <span className="flex items-center justify-center gap-1">
-                {cell.getDate()}
+                {cell.getUTCDate()}
                 {isMarked ? <span className="h-1.5 w-1.5 rounded-full bg-ice-400 shadow-[0_0_8px_rgba(93,210,255,0.8)]" /> : null}
               </span>
             </button>

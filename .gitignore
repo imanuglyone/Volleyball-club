@@ -9,4 +9,18 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+debug.log
 .vercel
+
+# Generated test and performance artifacts
+playwright-report/
+test-results/
+.lighthouseci/
+*.tsbuildinfo
+
+# Local design sources and raw QA evidence (optimized public assets and
+# Markdown reports stay versioned)
+.omx/assets/
+.omx/qa/*.json
+.omx/qa/*.log
+.omx/qa/*.png

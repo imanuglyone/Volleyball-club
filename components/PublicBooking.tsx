@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Calendar, formatDateKey } from '@/components/Calendar';
-import { formatDate, formatTimeRange, todayDateString } from '@/lib/format';
+import { formatDate, formatTimeRange } from '@/lib/format';
+import { clubDateString, clubLocalDateTimeKey } from '@/lib/club-time';
 import type { TrainingStats } from '@/lib/types';
 import { BookingModal } from '@/components/BookingModal';
 
 function getMonthRange(date: Date) {
-  const start = new Date(date.getFullYear(), date.getMonth(), 1);
-  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const start = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+  const end = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0));
   return { start, end };
 }
 
@@ -17,8 +18,8 @@ function toDateKey(date: Date) {
 }
 
 export function PublicBooking() {
-  const [month, setMonth] = useState(() => new Date());
-  const [selectedDate, setSelectedDate] = useState(() => todayDateString());
+  const [month, setMonth] = useState(() => new Date(`${clubDateString()}T12:00:00Z`));
+  const [selectedDate, setSelectedDate] = useState(() => clubDateString());
   const [markedDates, setMarkedDates] = useState<Set<string>>(new Set());
   const [monthTrainings, setMonthTrainings] = useState<TrainingStats[]>([]);
   const [trainings, setTrainings] = useState<TrainingStats[]>([]);
@@ -35,9 +36,10 @@ export function PublicBooking() {
   const nearestTrainingId = useMemo(() => {
     if (trainings.length === 0) return null;
     const sorted = [...trainings].sort((a, b) => a.start_time.localeCompare(b.start_time));
-    if (selectedDate === todayDateString()) {
-      const now = new Date();
-      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    if (selectedDate === clubDateString()) {
+      const [, clubTime = '00:00:00'] = clubLocalDateTimeKey().split('T');
+      const [currentHours, currentMinutes] = clubTime.split(':').map(Number);
+      const nowMinutes = currentHours * 60 + currentMinutes;
       const next = sorted.find((item) => {
         const [hours, minutes] = item.start_time.split(':').map((value) => Number(value));
         return hours * 60 + minutes >= nowMinutes;

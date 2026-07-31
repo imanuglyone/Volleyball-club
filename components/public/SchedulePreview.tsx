@@ -1,11 +1,21 @@
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-import { SectionLabel } from '@/components/ui/SectionLabel';
-import { TrainingFeed } from '@/components/app/TrainingFeed';
+import { SectionMarker } from './SectionMarker';
+import { PublicScheduleBooking } from './PublicScheduleBooking';
+import type { PublicTrainingView } from './public-types';
 
-export function SchedulePreview() {
-  return <section className="public-schedule" id="schedule">
-    <header><div><SectionLabel>03 / Ближайшие игры</SectionLabel><h2>Время выходить<br/>на площадку.</h2></div><Link href="/schedule">Всё расписание <ArrowUpRight size={17}/></Link></header>
-    <TrainingFeed limit={3} surface="public"/>
-  </section>;
+export function SchedulePreview({
+  initialTrainings = [],
+  initialError = false,
+}: {
+  initialTrainings?: PublicTrainingView[];
+  initialError?: boolean;
+}) {
+  return (
+    <section className="public-schedule" id="schedule" aria-labelledby="schedule-title">
+      <header>
+        <SectionMarker index="04">Живое расписание</SectionMarker>
+        <div><p>Места обновляются после каждой записи</p><h2 id="schedule-title">Выбери вечер.<br/><em>Остальное — за нами.</em></h2></div>
+      </header>
+      <PublicScheduleBooking initialTrainings={initialTrainings} initialError={initialError}/>
+    </section>
+  );
 }

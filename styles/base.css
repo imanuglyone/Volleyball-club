@@ -50,12 +50,12 @@ svg {
 }
 
 ::selection {
-  background: rgba(141, 69, 255, 0.5);
-  color: #fff;
+  background: rgba(77, 107, 255, 0.5);
+  color: var(--color-text-primary);
 }
 
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--color-violet-soft);
+  outline: 2px solid var(--color-ice);
   outline-offset: 3px;
 }
 
@@ -90,7 +90,7 @@ svg {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--color-violet-soft);
+  color: var(--color-ice);
   font-family: var(--font-mono);
   font-size: var(--text-micro);
   font-weight: 600;
@@ -104,8 +104,8 @@ svg {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--color-violet-bright);
-  box-shadow: 0 0 18px rgba(169, 92, 255, 0.8);
+  background: var(--color-cobalt);
+  box-shadow: 0 0 18px rgba(77, 107, 255, 0.64);
   content: "";
 }
 
@@ -154,7 +154,7 @@ svg {
 
 .ui-button--primary {
   background: var(--gradient-button);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.18), var(--shadow-violet);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.18), var(--shadow-cobalt);
 }
 
 .ui-button--secondary {
@@ -217,7 +217,7 @@ svg {
 
 .status-pill--available,
 .status-pill--almost-full,
-.status-pill--booked { color: var(--color-violet-soft); border-color: rgba(169, 92, 255, 0.28); background: rgba(141, 69, 255, 0.12); }
+.status-pill--booked { color: var(--color-ice); border-color: rgba(77, 107, 255, 0.34); background: rgba(77, 107, 255, 0.13); }
 .status-pill--full,
 .status-pill--completed { color: var(--color-text-muted); }
 .status-pill--cancelled { color: var(--color-danger); border-color: rgba(231, 133, 145, 0.3); }
@@ -253,7 +253,7 @@ svg {
   display: block;
   border-radius: inherit;
   background: var(--gradient-button);
-  box-shadow: 0 0 16px rgba(141, 69, 255, 0.56);
+  box-shadow: 0 0 16px rgba(77, 107, 255, 0.5);
   transition: width var(--motion-slow) var(--ease-enter);
 }
 
@@ -286,8 +286,8 @@ svg {
 
 .field__input:focus,
 .input:focus {
-  border-color: rgba(169, 92, 255, 0.72);
-  background: rgba(9, 7, 13, 0.92);
+  border-color: rgba(167, 216, 255, 0.68);
+  background: rgba(8, 11, 18, 0.94);
   outline: 0;
 }
 

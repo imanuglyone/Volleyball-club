@@ -1,9 +1,11 @@
-﻿'use client';
+'use client';
 
-import { useEffect, useState } from 'react';
+import Script from 'next/script';
+import { useEffect, useRef, useState } from 'react';
 import type { TrainingStats } from '@/lib/types';
 import { formatDate, formatTimeRange } from '@/lib/format';
 import { phoneRegex } from '@/lib/validators';
+import { club } from '@/components/public/site-content';
 
 type BookingModalProps = {
   open: boolean;
@@ -15,77 +17,86 @@ type BookingModalProps = {
 export function BookingModal({ open, training, onClose, onBooked }: BookingModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [consent, setConsent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [manageUrl, setManageUrl] = useState('');
+  const idempotencyRef = useRef('');
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '';
+  const turnstileMockToken =
+    process.env.NEXT_PUBLIC_TURNSTILE_MOCK_TOKEN || '';
 
   useEffect(() => {
     if (open) {
       setName('');
       setPhone('');
+      setConsent(false);
       setError(null);
       setSuccess(false);
+      setManageUrl('');
+      idempotencyRef.current = '';
     }
   }, [open]);
 
-  if (!open || !training) {
-    return null;
-  }
+  if (!open || !training) return null;
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
-
-    if (!training) {
-      setError('\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430.');
-      return;
-    }
+    if (!training) return;
 
     const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
-
     if (trimmedName.length < 2) {
-      setError('\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043c\u044f (\u043c\u0438\u043d\u0438\u043c\u0443\u043c 2 \u0441\u0438\u043c\u0432\u043e\u043b\u0430).');
+      setError('Введите имя — минимум 2 символа.');
       return;
     }
     if (!phoneRegex.test(trimmedPhone)) {
-      setError('\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043a\u043e\u0440\u0440\u0435\u043a\u0442\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0444\u043e\u043d.');
+      setError('Введите корректный телефон.');
+      return;
+    }
+    if (!consent) {
+      setError('Подтвердите согласие на обработку контакта.');
       return;
     }
 
+    const formData = new FormData(event.currentTarget);
+    const idempotencyKey = idempotencyRef.current || crypto.randomUUID();
+    idempotencyRef.current = idempotencyKey;
     setSubmitting(true);
     try {
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey
         },
         body: JSON.stringify({
+          version: 1,
           training_id: training.id,
           name: trimmedName,
-          phone: trimmedPhone
+          phone: trimmedPhone,
+          consent: true,
+          consent_version: club.consentVersion,
+          idempotency_key: idempotencyKey,
+          turnstile_token: String(
+            formData.get('cf-turnstile-response') || turnstileMockToken,
+          ),
+          website: String(formData.get('website') || '')
         })
       });
-
-      const payload = await response.json();
-
+      const payload = await response.json().catch(() => ({})) as { error?: string; manage_url?: string };
       if (!response.ok) {
-        if (response.status === 409) {
-          if (payload?.error === 'booking_full') {
-            setError('\u041c\u0435\u0441\u0442 \u0431\u043e\u043b\u044c\u0448\u0435 \u043d\u0435\u0442.');
-          } else if (payload?.error === 'booking_duplicate') {
-            setError('\u0412\u044b \u0443\u0436\u0435 \u0437\u0430\u043f\u0438\u0441\u0430\u043d\u044b \u043d\u0430 \u044d\u0442\u0443 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443.');
-          } else {
-            setError('\u0417\u0430\u043f\u0438\u0441\u044c \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u0430.');
-          }
-        } else if (response.status === 429) {
-          setError('\u0421\u043b\u0438\u0448\u043a\u043e\u043c \u043c\u043d\u043e\u0433\u043e \u0437\u0430\u043f\u0440\u043e\u0441\u043e\u0432. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.');
-        } else {
-          setError('\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0437\u0430\u043f\u0438\u0441\u0438. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.');
-        }
+        if (payload.error === 'booking_full') setError('Свободных мест больше нет.');
+        else if (payload.error === 'booking_duplicate') setError('На этот телефон уже есть активная запись.');
+        else if (payload.error === 'rate_limited') setError('Слишком много попыток. Попробуйте немного позже.');
+        else if (payload.error === 'unauthorized') setError('Не удалось подтвердить защиту формы. Обновите страницу.');
+        else setError('Запись не создана. Проверьте данные и попробуйте ещё раз.');
         return;
       }
-
+      idempotencyRef.current = '';
+      setManageUrl(payload.manage_url || '');
       setSuccess(true);
       onBooked();
     } finally {
@@ -97,51 +108,43 @@ export function BookingModal({ open, training, onClose, onBooked }: BookingModal
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
       <div className="card w-full max-w-md p-6">
         <div className="flex items-center justify-between">
-          <div className="text-lg font-semibold text-white">{'\u0417\u0430\u043f\u0438\u0441\u044c \u043d\u0430 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0443'}</div>
-          <button type="button" className="btn-ghost" onClick={onClose}>
-            {'\u0417\u0430\u043a\u0440\u044b\u0442\u044c'}
-          </button>
+          <div className="text-lg font-semibold text-white">Запись на тренировку</div>
+          <button type="button" className="btn-ghost" onClick={onClose}>Закрыть</button>
         </div>
-
         <div className="mt-4 text-sm text-steel-200">
           {formatDate(training.date)} · {formatTimeRange(training.start_time, training.end_time)}
         </div>
 
         {success ? (
           <div className="mt-6 rounded-xl border border-ice-500/30 bg-night-900/60 p-4 text-sm text-steel-200">
-            <div className="text-base font-semibold text-white">{'\u0412\u044b \u0437\u0430\u043f\u0438\u0441\u0430\u043d\u044b!'}</div>
-            <div className="mt-1">
-              {'\u0415\u0441\u043b\u0438 \u043f\u043b\u0430\u043d\u044b \u0438\u0437\u043c\u0435\u043d\u0438\u043b\u0438\u0441\u044c \u2014 \u043d\u0430\u043f\u0438\u0448\u0438\u0442\u0435 \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0443.'}
-            </div>
+            <div className="text-base font-semibold text-white">Вы записаны!</div>
+            <div className="mt-1">Сохраните личную ссылку: через неё можно проверить или отменить запись.</div>
+            {manageUrl ? <a className="btn-primary mt-4 inline-flex" href={manageUrl}>Открыть мою запись</a> : null}
           </div>
         ) : (
-          <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+          <form className="mt-6 space-y-4" onSubmit={handleSubmit} onChange={() => { idempotencyRef.current = ''; }}>
             <label className="block">
-              <div className="label">{'\u0418\u043c\u044f'}</div>
-              <input
-                className="input"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder={'\u0412\u0430\u0448\u0435 \u0438\u043c\u044f'}
-                required
-              />
+              <div className="label">Имя</div>
+              <input className="input" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ваше имя" autoComplete="name" required/>
             </label>
-
             <label className="block">
-              <div className="label">{'\u0422\u0435\u043b\u0435\u0444\u043e\u043d'}</div>
-              <input
-                className="input"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                placeholder="+7 900 000-00-00"
-                required
-              />
+              <div className="label">Телефон</div>
+              <input className="input" type="tel" inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+7 900 000-00-00" autoComplete="tel" required/>
             </label>
-
-            {error ? <div className="text-sm text-red-400">{error}</div> : null}
-
+            <label className="flex items-start gap-3 text-xs text-steel-200">
+              <input className="mt-0.5 h-4 w-4 accent-signal" type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required/>
+              <span>Согласен на обработку контакта для организации тренировки и управления записью.</span>
+            </label>
+            <label className="sr-only" aria-hidden="true">Сайт<input name="website" tabIndex={-1} autoComplete="off"/></label>
+            {turnstileSiteKey ? (
+              <>
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload"/>
+                <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark"/>
+              </>
+            ) : null}
+            {error ? <div className="text-sm text-red-400" role="alert">{error}</div> : null}
             <button type="submit" className="btn-primary w-full" disabled={submitting}>
-              {submitting ? '\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c...' : '\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u044c'}
+              {submitting ? 'Проверяем место…' : 'Подтвердить запись'}
             </button>
           </form>
         )}

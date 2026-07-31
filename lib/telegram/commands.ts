@@ -1,5 +1,6 @@
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { formatDate, formatTimeRange, todayDateString } from '@/lib/format';
+import { formatDate, formatTimeRange } from '@/lib/format';
+import { clubDateString } from '@/lib/club-time';
 import { helpMessage, trainingSummary } from './messages';
 
 export function parseDateInput(input?: string) {
@@ -11,7 +12,7 @@ export function parseDateInput(input?: string) {
 
 export async function nextTraining() {
   const { data } = await createSupabaseAdminClient().from('trainings_stats').select('*')
-    .eq('is_active', true).gte('date', todayDateString()).order('date').order('start_time').limit(1);
+    .eq('is_active', true).gte('date', clubDateString()).order('date').order('start_time').limit(1);
   return data?.[0] ? trainingSummary(data[0]) : 'Ближайших тренировок пока нет.';
 }
 

@@ -10,6 +10,9 @@ export function validateTelegramInitData(
   nowSeconds = Math.floor(Date.now() / 1000)
 ): VerifiedTelegramData {
   if (!initData || !botToken) throw new Error('telegram_auth_missing');
+  if (!Number.isSafeInteger(maxAgeSeconds) || maxAgeSeconds <= 0) {
+    throw new Error('telegram_auth_config_invalid');
+  }
   const params = new URLSearchParams(initData);
   const receivedHash = params.get('hash');
   if (!receivedHash || !/^[a-f0-9]{64}$/i.test(receivedHash)) throw new Error('telegram_auth_invalid');
