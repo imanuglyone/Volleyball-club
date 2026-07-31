@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowIcon, BallIcon, ClockIcon, TeamIcon } from '@/components/icons/AvangardIcons';
+import { HeroVideo } from '@/components/public/HeroVideo';
 
 const signals = [
   { icon: ClockIcon, value: '60 сек', label: 'на запись' },
@@ -22,6 +23,7 @@ export function HeroSection() {
             className="public-hero__poster"
           />
         </picture>
+        <HeroVideo />
         <div className="public-hero__media-shade"/>
         <div className="public-hero__trajectory"><i/><i/><i/></div>
       </div>

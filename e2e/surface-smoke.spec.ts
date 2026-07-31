@@ -50,6 +50,20 @@ test('public pages do not expose participant phone links', async ({ page }) => {
   await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
 });
 
+test('public hero loads the selected cobalt video progressively', async ({ page }) => {
+  await page.goto('/');
+  const video = page.locator('.public-hero__video');
+  await expect(video).toHaveCount(1);
+  await expect(video).toHaveAttribute(
+    'poster',
+    '/images/v2/avangard-hero-poster-cobalt.webp',
+  );
+  await expect(video.locator('source')).toHaveAttribute(
+    'src',
+    '/videos/avangard-hero-cobalt.mp4',
+  );
+});
+
 test('reduced motion keeps the public hero usable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
