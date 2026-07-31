@@ -331,7 +331,7 @@ begin
   insert into public.trainings(
     id, date, start_time, end_time, price, capacity, is_active
   ) values (
-    v_training, '2099-12-30', '18:00', '20:00', 500, 10, true
+    v_training, '2099-12-31', '18:00', '20:00', 500, 10, true
   );
   insert into public.profiles(
     id, telegram_user_id, first_name, display_name, phone, phone_verified_at
