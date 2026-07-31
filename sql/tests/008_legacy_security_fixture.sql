@@ -55,14 +55,9 @@ returns boolean
 language sql
 as $$ select false $$;
 
-create function public.create_booking(
-  p_training_id uuid,
-  p_name text,
-  p_phone text
-)
-returns uuid
-language sql
-as $$ select gen_random_uuid() $$;
+-- create_booking(uuid, text, text) is intentionally reused from 001_init.sql.
+-- This mirrors production and verifies that 008 hardens an existing legacy
+-- function instead of requiring a fixture-specific replacement.
 
 grant all on table
   public.players,
